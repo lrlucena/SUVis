@@ -165,9 +165,9 @@ public class SVAxis {
             g2.setColor(m_axisColor);
             g2.drawLine(xa, ya, xa, ya + ticb);
             if (anum > -azero && anum < azero) {
-                str = String.format("%1.2f", 0.0);
+                str = String.format("%1.0f", 0.0);
             } else {
-                str = String.format("%1.2f", anum);
+                str = String.format("%1.0f", anum);
             }
             lstr = str.length();
             tw = lstr * getLabelsCW(g);
