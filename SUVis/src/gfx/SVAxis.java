@@ -5,8 +5,7 @@
  *
  * Federal University of Para, Brazil.
  * Department of Geophysics
- */  
-
+ */
 package gfx;
 
 /**
@@ -17,16 +16,17 @@ package gfx;
  * @author Williams Lima
  */
 public class SVAxis {
-    public SVAxis(int orientation, int side, String title){        
+
+    public SVAxis(int orientation, int side, String title) {
         m_orientation = orientation;
         m_axisSide = side;
         m_title = title;
         m_titleFont = new java.awt.Font("Courier", java.awt.Font.PLAIN, 12);
         m_labelFont = new java.awt.Font("Courier", java.awt.Font.PLAIN, 12);
     }
-    
-    public void draw(java.awt.Graphics2D g, int x, int y, int width, int height){
-        switch(m_orientation){
+
+    public void draw(java.awt.Graphics2D g, int x, int y, int width, int height) {
+        switch (m_orientation) {
             case HORIZONTAL:
                 drawHorizontalAxis(g, x, y, width, height);
                 break;
@@ -35,57 +35,72 @@ public class SVAxis {
                 break;
         }
     }
-    
-    public void setAxisColor(java.awt.Color c){
-        
+
+    public void setAxisColor(java.awt.Color c) {
     }
 
-    public void setLabelColor(java.awt.Color c){
-        
+    public void setLabelColor(java.awt.Color c) {
     }
-    
-    public void setTitleColor(java.awt.Color c){
-        
+
+    public void setTitleColor(java.awt.Color c) {
     }
-    
-    public void setOrientation(int h){
+
+    public void setOrientation(int h) {
         m_orientation = h;
     }
-    
-    public int getOrientation(){
+
+    public int getOrientation() {
         return m_orientation;
     }
-    
-    public int getAxisSide(){
+
+    public int getAxisSide() {
         return m_axisSide;
     }
-    
-    public void setStyle(int s){
+
+    public void setStyle(int s) {
         m_style = s;
     }
-    
-    public int getStyle(){
+
+    public int getStyle() {
         return m_style;
     }
-    
-    public void setLimits(float xmin, float xmax){
+
+    public void setLimits(float xmin, float xmax) {
         m_xmin = xmin;
         m_xmax = xmax;
     }
-    
-    public void setVisible(boolean f){
-        
+
+    public float[] getLimits() {
+        float v[] = {m_xmin, m_xmax};
+        return v;
     }
 
-    public void setTitle(String title){
+    public float[] getLimitsInitial() {
+        if (m_xmaxInitial > 0) {
+            float v[] = {m_xminInitial, m_xmaxInitial};
+            return v;
+        } else {
+            return getLimits();
+        }
+    }
+
+    public void setLimitsInitial(float xmin, float xmax) {
+        m_xmaxInitial = xmax;
+        m_xminInitial = xmin;
+    }
+
+    public void setVisible(boolean f) {
+    }
+
+    public void setTitle(String title) {
         this.m_title = title;
     }
-    
+
     private void drawHorizontalAxis(java.awt.Graphics g, int pX, int pY, int pWidth, int pHeight) {
         float xbeg = m_xmin;
         float xend = m_xmax;
         float pbeg = m_pbeg;
-        float pend = m_pend;       
+        float pend = m_pend;
 
         double amin = (xbeg < xend) ? xbeg : xend;
         double amax = (xbeg > xend) ? xbeg : xend;
@@ -103,7 +118,7 @@ public class SVAxis {
 
         double dtic = m_dtic;
         double ntic = m_ntic;
-        double fnum = m_fnum;        
+        double fnum = m_fnum;
 
         dtic = sc.dxnum;
         ntic = sc.nxnum;
@@ -127,7 +142,7 @@ public class SVAxis {
         int ticb = 0;
         int numb = 0;
         int labelb = 0;
-        
+
         switch (m_axisSide) {
             case AXIS_TOP:
                 ticb = -ticsize;
@@ -148,7 +163,7 @@ public class SVAxis {
         boolean grided = false;
 
         java.awt.Graphics2D g2 = (java.awt.Graphics2D) g;
-        
+
         double azero = 0.0001 * (amax - amin);
         String str;
         int lstr;
@@ -159,8 +174,8 @@ public class SVAxis {
             if (anum < amin) {
                 continue;
             }
-            
-            xa = (int) (base + scale * anum);            
+
+            xa = (int) (base + scale * anum);
 
             g2.setColor(m_axisColor);
             g2.drawLine(xa, ya, xa, ya + ticb);
@@ -199,7 +214,7 @@ public class SVAxis {
         float xbeg = m_xmin;
         float xend = m_xmax;
         float pbeg = m_pbeg;
-        float pend = m_pend;        
+        float pend = m_pend;
 
         double amin = (xbeg < xend) ? xbeg : xend;
         double amax = (xbeg > xend) ? xbeg : xend;
@@ -233,7 +248,7 @@ public class SVAxis {
 
         int ticb = -ticsize;
         int numb = ticb - ticsize / 4;
-        int labelb = 0;       
+        int labelb = 0;
 
         if (m_style == AXIS_NORMAL) {
             scale = -pHeight / (xend + pend - xbeg - pbeg);
@@ -243,7 +258,7 @@ public class SVAxis {
         boolean grided = false;
 
         java.awt.Graphics2D g2 = (java.awt.Graphics2D) g;
-        
+
         double azero = 0.0001 * (amax - amin);
         String str;
         int lstr;
@@ -253,7 +268,7 @@ public class SVAxis {
                 continue;
             }
             ya = (int) (base + scale * anum);
-            
+
             g2.setColor(m_axisColor);
             g2.drawLine(xa, ya, xa + ticb, ya);
             if (anum > -azero && anum < azero) {
@@ -293,7 +308,7 @@ public class SVAxis {
 
         g2.setTransform(t);
 
-    }    
+    }
 
     private int getLabelsCW(java.awt.Graphics g) {
         java.awt.font.FontRenderContext frc = ((java.awt.Graphics2D) g).getFontRenderContext();
@@ -318,7 +333,7 @@ public class SVAxis {
         java.awt.geom.Rectangle2D br = m_titleFont.getStringBounds("A", frc);
         return (int) br.getWidth();
     }
-    
+
     // scaxis
     // Adapted from SU source codes
     // CREDITS
@@ -393,18 +408,18 @@ public class SVAxis {
     int m_style = AXIS_REVERSED;        // NORMAL or REVERSED
     float m_xmin;
     float m_xmax;
+    private float m_xminInitial;
+    private float m_xmaxInitial;
     int m_pbeg;
     int m_pend;
     double m_dtic;
     double m_ntic;
     double m_fnum;
-    
     java.awt.Color m_axisColor = java.awt.Color.black;
     java.awt.Color m_labelColor = java.awt.Color.black;
     java.awt.Color m_titleColor = java.awt.Color.black;
     private java.awt.Font m_titleFont;
     private java.awt.Font m_labelFont;
-    
     String m_title = "";
     // Constants
     public static final int VERTICAL = 0;
@@ -412,9 +427,8 @@ public class SVAxis {
     public static final int AXIS_LEFT = 2;
     public static final int AXIS_RIGHT = 3;
     public static final int AXIS_TOP = 4;
-    public static final int AXIS_BOTTOM = 5;    
+    public static final int AXIS_BOTTOM = 5;
     public static final int AXIS_NORMAL = 6;
     public static final int AXIS_REVERSED = 7;
     private final int AXIS_TICSIZE = 5;
-    
 }
