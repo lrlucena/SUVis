@@ -441,7 +441,6 @@ public  class SVGraphicsPanelBar extends javax.swing.JPanel
                 }
             }
             SVGraphicsPanel svg = ((SVGraphicsPanel) this.getParent());
-            System.out.println(svg.isVisibleScrollBar());
             if (svg.isVisibleScrollBar()) {
                 if ((m_cursorCoord.ix - m_rubberX) != 0 || (m_cursorCoord.iy - m_rubberY) != 0) {
                     m_axisPanelX.setHScrollBarActive(true);
@@ -452,8 +451,6 @@ public  class SVGraphicsPanelBar extends javax.swing.JPanel
                     int vMax = (int) ((m_x1begb *100) + ( (m_x1end*100) - (m_x1endb *100))) +5 ;
                     int hMax = (int) ((m_x2begb *100) + ((m_x2end*100 ) - (m_x2endb *100))) -50 ;
                     int hVal = ((int) (m_x2begb*100 )) > hMax ? hMax : (int) (m_x2begb *100);
-//                     System.out.println(m_x1begb + " " + m_x1endb + " " + m_x2begb + " " + " " + m_x2endb + " , " + m_x1beg + " " + m_x1end + " " + m_x2beg + " " + " " + m_x2end);
-//                    System.out.println("hMax: "+hMax+" hVal: "+hVal);
                     JScrollBar hBar = new JScrollBar(JScrollBar.HORIZONTAL,hVal , 5, (int) m_x2beg*100, hMax);
                     JScrollBar vBar = new JScrollBar(JScrollBar.VERTICAL, (int) (m_x1begb*100 ), 5,(int) m_x1beg*100, vMax);
                     hBar.addAdjustmentListener(new AdjustmentListener() {
@@ -467,7 +464,6 @@ public  class SVGraphicsPanelBar extends javax.swing.JPanel
                             componentResized(null);
                             m_imageOutOfDate = true;
                             float[] v= m_axisPanelX.getAxis().getLimitsInitial();
-                            float dv = m_x2beg/v[0];
                             float dv2 = Math.abs(v[1]-v[0]+1)/Math.abs(m_x2beg-m_x2end);                           
                             float xmin = (((m_x2begb-m_x2beg)*dv2)+v[0]);
                             float xmax = (((m_x2endb-m_x2beg)*dv2)+v[0]);       

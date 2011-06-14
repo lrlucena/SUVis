@@ -91,6 +91,7 @@ public class SVGraphicsPanel extends javax.swing.JPanel {
 
     public void removeAllActors() {
         panelCenter.removeAllActors();
+        clearPanels();
     }
 
     public void removeAllXYPlot() {
