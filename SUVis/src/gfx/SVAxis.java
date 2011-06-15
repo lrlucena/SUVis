@@ -76,7 +76,7 @@ public class SVAxis {
     }
 
     public float[] getLimitsInitial() {
-        if (m_xmaxInitial > 0) {
+        if (m_xmaxInitial != 0) {
             float v[] = {m_xminInitial, m_xmaxInitial};
             return v;
         } else {
