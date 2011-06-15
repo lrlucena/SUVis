@@ -331,7 +331,7 @@ public  class SVGraphicsPanelBar extends javax.swing.JPanel
     }
 
     public void mouseClicked(MouseEvent e) {
-       
+       System.out.println("Limits: "+getAxisLimits()[0]+" "+getAxisLimits()[1]+" "+getAxisLimits()[2]+" "+getAxisLimits()[3]);
     }
 
     public void mousePressed(MouseEvent e) {
@@ -440,6 +440,7 @@ public  class SVGraphicsPanelBar extends javax.swing.JPanel
                     m_x2endb = x2end;
                 }
             }
+            final Float scala = 100000f;
             SVGraphicsPanel svg = ((SVGraphicsPanel) this.getParent());
             if (svg.isVisibleScrollBar()) {
                 if ((m_cursorCoord.ix - m_rubberX) != 0 || (m_cursorCoord.iy - m_rubberY) != 0) {
@@ -448,25 +449,30 @@ public  class SVGraphicsPanelBar extends javax.swing.JPanel
                     svg.clearPanels();
                     svg.getPanelH().setPreferredSize(new Dimension(this.getWidth(), SVGraphicsPanel.SIZE_SCROLLBAR));
                     svg.getPanelV().setPreferredSize(new Dimension(SVGraphicsPanel.SIZE_SCROLLBAR, getHeight()));
-                    int vMax = (int) ((m_x1begb *100) + ( (m_x1end*100) - (m_x1endb *100))) +5 ;
-                    int hMax = (int) ((m_x2begb *100) + ((m_x2end*100 ) - (m_x2endb *100))) -50 ;
-                    int hVal = ((int) (m_x2begb*100 )) > hMax ? hMax : (int) (m_x2begb *100);
-                    JScrollBar hBar = new JScrollBar(JScrollBar.HORIZONTAL,hVal , 5, (int) m_x2beg*100, hMax);
-                    JScrollBar vBar = new JScrollBar(JScrollBar.VERTICAL, (int) (m_x1begb*100 ), 5,(int) m_x1beg*100, vMax);
+                    int vMax = (int) ((m_x1begb *scala) + ( (m_x1end*scala) - (m_x1endb *scala))) +50 ;
+                    int hMax = (int) ((m_x2begb *scala) + ((m_x2end*scala ) - (m_x2endb *scala))) -500 ;
+                    int hVal = ((int) (m_x2begb*scala )) >= hMax ? hMax : (int) (m_x2begb *scala);                    
+//                    System.out.println("vMax: "+vMax+" hMax: "+hMax);
+//                    System.out.println("vMin: "+ (m_x1beg*scala )+" hMin: "+ m_x2beg*scala);
+//                    System.out.println("vVal: "+ (m_x1begb*scala )+" hVal: "+hVal);
+//                    System.out.println(m_x1beg+" "+m_x1end+" "+m_x2beg+" "+m_x2end+" " +
+//                            "\n"+m_x1begb+" "+m_x1endb+" "+m_x2begb+" "+m_x2endb);
+                    JScrollBar hBar = new JScrollBar(JScrollBar.HORIZONTAL,hVal , 5, (int) (m_x2beg*scala), hMax);
+                    JScrollBar vBar = new JScrollBar(JScrollBar.VERTICAL, (int) (m_x1begb*scala ), 5,(int) (m_x1beg*scala), vMax);
                     hBar.addAdjustmentListener(new AdjustmentListener() {
 
                         @Override
                         public void adjustmentValueChanged(AdjustmentEvent e) {
-                            float newVal = (e.getValue() /100f) - m_x2begb;
+                            float newVal = (e.getValue() /scala.floatValue()) - m_x2begb;
                             m_x2begb = m_x2begb + newVal ;
                             m_x2endb = m_x2endb + newVal ;
                             m_eraseOldCrossLines = true;
                             componentResized(null);
                             m_imageOutOfDate = true;
                             float[] v= m_axisPanelX.getAxis().getLimitsInitial();
-                            float dv2 = Math.abs(v[1]-v[0]+1)/Math.abs(m_x2beg-m_x2end);                           
+                            float dv2 = ((v[1]-v[0]+1))/(m_x2end -m_x2beg);
                             float xmin = (((m_x2begb-m_x2beg)*dv2)+v[0]);
-                            float xmax = (((m_x2endb-m_x2beg)*dv2)+v[0]);       
+                            float xmax = (((m_x2endb-m_x2beg)*dv2)+v[0]);                           
                             m_axisPanelX.getAxis().setLimits(xmin, xmax);
                             m_axisPanelX.getParent().repaint();                            
                             repaint();
@@ -476,7 +482,7 @@ public  class SVGraphicsPanelBar extends javax.swing.JPanel
 
                         @Override
                         public void adjustmentValueChanged(AdjustmentEvent e) {
-                            float newVal = (e.getValue()/100f ) - m_x1begb;
+                            float newVal = (e.getValue()/scala.floatValue() ) - m_x1begb;
                             m_x1begb = m_x1begb + newVal;
                             m_x1endb = m_x1endb + newVal;
                             m_eraseOldCrossLines = true;
