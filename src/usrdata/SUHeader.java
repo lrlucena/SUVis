@@ -9,6 +9,7 @@ package usrdata;
  * Federal University of Para.
  * Department of Geophysics
  */
+
 import java.io.*;
 
 /**
@@ -192,8 +193,6 @@ public class SUHeader {
 
     }
 
- 
-
     public void writeToFile(FileOutputStream pOut) {
         NumericIO.writeInt(pOut, tracl);
         NumericIO.writeInt(pOut, tracr);
@@ -367,12 +366,27 @@ public class SUHeader {
     public short unass[] = new short[14];
 
     public int getValue(String pkey) {
-        if(pkey == null){
+        if (pkey == null) {
             return fldr;
         }
-        if(pkey.equals("cdp")){
+        if (pkey.equals("cdp")) {
             return cdp;
-        }else{
+        } else {
+            if (pkey.equals("offset")) {
+                return offset;
+            } else {
+                if (pkey.equals("tracf")) {
+                    return tracf;
+                } else {
+                    if (pkey.equals("ep")) {
+                        return ep;
+                    } else {
+                        if (pkey.equals("fldr")) {
+                            return fldr;
+                        }
+                    }
+                }
+            }
 
         }
         return fldr;
