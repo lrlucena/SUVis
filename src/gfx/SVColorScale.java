@@ -127,6 +127,14 @@ public class SVColorScale extends SVActor {
         m_imageOutOfDate = true;
 
     }
+    
+    public void setColormap(int type, int map){
+        if(type == RGB){
+            setRGBColormap(map);
+        }else{
+            setHSVColormap(map);
+        }
+    }
 
     public void setRGBColormap(int map) {
         if (map < 0) {
@@ -156,7 +164,10 @@ public class SVColorScale extends SVActor {
     public void nextColormap() {
         m_currColormapIndex++;
 
-        if (m_currColormapIndex > RGB_MAX) {
+        if (m_colormapType == RGB && m_currColormapIndex > RGB_MAX) {
+            m_currColormapIndex = 0;
+        }
+        if (m_colormapType == HSV && m_currColormapIndex > HSV_MAX) {
             m_currColormapIndex = 0;
         }
 
@@ -166,8 +177,11 @@ public class SVColorScale extends SVActor {
     public void previousColormap() {
         m_currColormapIndex--;
 
-        if (m_currColormapIndex < 0) {
+        if (m_colormapType == RGB && m_currColormapIndex < 0) {
             m_currColormapIndex = RGB_MAX;
+        }
+        if (m_colormapType == HSV && m_currColormapIndex < 0) {
+            m_currColormapIndex = HSV_MAX;
         }
 
         m_imageOutOfDate = true;
@@ -193,6 +207,10 @@ public class SVColorScale extends SVActor {
         m_autoPerc = false;
         m_autoClip = true;
         m_imageOutOfDate = true;
+    }
+    
+    public void setColorMapType(int type){
+        m_colormapType = type;
     }
 
     public float getImagPerc() {
@@ -234,6 +252,10 @@ public class SVColorScale extends SVActor {
         m_autoBalance = false;
     }
 
+    public int getCurrColorMapIndex(){
+        return m_currColormapIndex;
+    }
+    
     public void setClipParameters(float clip, float bclip, float wclip) {
 //           System.out.println("229 m_clip =" +  m_clip );
 //           System.out.println("229  m_wclip"  + m_wclip );
@@ -858,8 +880,8 @@ public class SVColorScale extends SVActor {
     private int m_bytesPerPixel = 3;
     private int m_byteOrder = LSBFirst;
     // Colormap
-    private final int RGB = 0;
-    private final int HSV = 1;
+    public static final int RGB = 0;
+    public static final int HSV = 1;
     private int m_colormapType = RGB;
     private int m_currColormapIndex = 2;
     //
@@ -875,7 +897,7 @@ public class SVColorScale extends SVActor {
     // Constants
     private final int ICMAX = 99; /* must be odd, so that ICMAC-ic!=ic, for ic=0 to ICMAX/2! */
 
-    private final int NTABLE = ICMAX + 1;
-    private final int HSV_MAX = 13;
-    private final int RGB_MAX = 11;
+    public final int NTABLE = ICMAX + 1;
+    public final int HSV_MAX = 13;
+    public final int RGB_MAX = 11;
 }
