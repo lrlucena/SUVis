@@ -31,6 +31,8 @@ public class SUSection {
         preStakcData = false;
         amplitude = 1;
         eof = false;
+        m_xdr = true;
+    
     }
 
     public void addTrace(SUTrace pTrace) {
@@ -172,7 +174,7 @@ public class SUSection {
         if (!isPreStakcData()) {
             for (int i = 0; i < pNumTraces; i++) {
                 tr = new SUTrace();
-                tr.readFromFile(pInputFile, false);
+                tr.readFromFile(pInputFile, false,m_xdr);
                 m_traces.add(tr);
             }
         } else {
@@ -189,12 +191,11 @@ public class SUSection {
 
     public void readFromInputStream(InputStream input) {
 
-
         if(isEof())
             return;
 
         SUTrace trace = new SUTrace();
-        trace.readFromFile(input, false);
+        trace.readFromFile(input, false,m_xdr);
         m_traces.clear();
         boolean flag = false;
         try {
@@ -202,7 +203,7 @@ public class SUSection {
                 m_traces.add(trace);
                 while (input.available() > 0) {
                     trace = new SUTrace();
-                    trace.readFromFile(input, false);
+                    trace.readFromFile(input, false,m_xdr);
                     m_traces.add(trace);
                 }
             } else {
@@ -214,7 +215,7 @@ public class SUSection {
                 ekey = skey = m_traces.get(0).getHeader().getValue(pkey);
                 while (input.available() > 0 && !flag) {
                     trace = new SUTrace();
-                    trace.readFromFile(input, false);
+                    trace.readFromFile(input, false,m_xdr);
                     ekey = trace.getHeader().getValue(pkey);
                     if (skey == ekey) {
                         m_traces.add(trace);
@@ -247,12 +248,12 @@ public class SUSection {
                 java.io.FileInputStream ifStream = new java.io.FileInputStream(inpF);
                 SUTrace tr = null;
                 tr = new SUTrace();
-                tr.readFromFile(ifStream, false);
+                tr.readFromFile(ifStream, false,m_xdr);
                 m_traces.add(tr);
                 long ntraces = inpF.length() / (240 + tr.getHeader().ns * 4);
                 for (int i = 0; i < ntraces - 1; i++) {
                     tr = new SUTrace();
-                    tr.readFromFile(ifStream, false);
+                    tr.readFromFile(ifStream, false,m_xdr);
                     m_traces.add(tr);
                 }
             } else {
@@ -270,7 +271,7 @@ public class SUSection {
 
     public void writeToFile(FileOutputStream pOutputFile) {
         for (int i = 0; i < m_traces.size(); i++) {
-            m_traces.get(i).writeToFile(pOutputFile);
+            m_traces.get(i).writeToFile(pOutputFile,m_xdr);
         }
     }
 
@@ -324,6 +325,8 @@ public class SUSection {
     float m_d1;
     /**< Sampling interval in 1st dimension. */
     float m_d2;
+    /** xdr format */
+    boolean m_xdr;
 
     /**
      * @return the eof
