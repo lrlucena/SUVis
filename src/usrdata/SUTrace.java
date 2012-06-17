@@ -1,14 +1,14 @@
 package usrdata;
 /*
  * SUTrace.java
- * 
+ *
  * Created on 25 de Agosto de 2007, 11:30
  *
  * Project: BotoSeis
  *
- * Federal University of Para.
- * Department of Geophysics
+ * Federal University of Para. Department of Geophysics
  */
+
 import java.io.*;
 
 /**
@@ -18,9 +18,10 @@ import java.io.*;
  */
 public class SUTrace {
 
-    /** Creates a new instance of SUTrace */
+    /**
+     * Creates a new instance of SUTrace
+     */
     public SUTrace() {
-
     }
 
     public void setData(float pData[]) {
@@ -63,7 +64,36 @@ public class SUTrace {
                 } else {
                     m_data = new float[ns];
                     for (char i = 0; i < ns; i++) {
+
                         m_data[i] = NumericIO.readFloat(pInput);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("SUTrace.readFromFile");
+            System.out.println("\t" + e.toString());
+        }
+    }
+
+    public void readFromFile(InputStream pInput, boolean pSkipData, boolean xdrFlag) {
+        try {
+            if (xdrFlag) {
+                m_header.readFromFileXDR(pInput);
+            } else {
+                m_header.readFromFile(pInput);
+            }
+            char ns = m_header.ns;
+            if (ns > 0) {
+                if (pSkipData) {
+                    pInput.skip(ns * Float.SIZE / 8);
+                } else {
+                    m_data = new float[ns];
+                    for (char i = 0; i < ns; i++) {
+                        if (xdrFlag) {
+                            m_data[i] = NumericIO.readSwapFloat(pInput);
+                        } else {
+                            m_data[i] = NumericIO.readFloat(pInput);
+                        }
                     }
                 }
             }
@@ -81,7 +111,25 @@ public class SUTrace {
                 NumericIO.writeFloat(pOutput, m_data[i]);
             }
         } catch (NullPointerException ex) {
+        }
+    }
 
+    public void writeToFile(FileOutputStream pOutput, boolean xdrFlag) {
+        if(xdrFlag){
+            m_header.writeToFileXDR(pOutput);
+        }else{
+        m_header.writeToFile(pOutput);
+        }
+        char ns = m_header.ns;
+        try {
+            for (char i = 0; i < ns; i++) {
+                if (xdrFlag) {
+                    NumericIO.writeSwapFloat(pOutput, m_data[i]);
+                } else {
+                    NumericIO.writeFloat(pOutput, m_data[i]);
+                }
+            }
+        } catch (NullPointerException ex) {
         }
     }
     // Variables declaration
