@@ -188,6 +188,14 @@ public class SUSection {
 
         return true;
     }
+    
+    public void setFormat(String format){
+        m_xdr = true;
+        
+        if(format.equalsIgnoreCase("no-xdr")){
+            m_xdr = false;
+        }
+    }
 
     public void readFromInputStream(InputStream input) {
 

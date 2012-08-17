@@ -86,7 +86,7 @@ abstract public class SVActor {
         int YMatr = Math.round((x2 - delrt) / dt) + 1;
 
         int n_linhamaximo = m_n1;
-        return (YMatr - 1 + (XMatr - 1) * (n_linhamaximo));
+        return ( (YMatr - 1) + (XMatr - 1) * (n_linhamaximo));
     }
 
     public int getTraceAt(float x1, float x2){
