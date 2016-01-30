@@ -1,4 +1,5 @@
 package usrdata;
+
 /*
  * NumericIO.java
  *
@@ -8,11 +9,14 @@ package usrdata;
  *
  * Federal University of Para. Department of Geophysics
  */
-
 import java.io.*;
+import static java.lang.Float.floatToIntBits;
+import static java.lang.Float.floatToRawIntBits;
+import static java.lang.Float.intBitsToFloat;
+import static java.lang.System.out;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
+import static java.nio.ByteBuffer.wrap;
+import static java.nio.ByteOrder.BIG_ENDIAN;
 
 /**
  * The NumericIO is a utility class to read/write raw numeric data from/to disk
@@ -30,7 +34,7 @@ public class NumericIO {
     }
 
     public static int readInt(InputStream pInput) {
-        int ret = 0;
+        int ret;
         try {
             byte buff[] = new byte[4];
             pInput.read(buff);
@@ -43,13 +47,12 @@ public class NumericIO {
     }
 
     public static int readSwapInt(InputStream pInput) {
-        int ret = 0;
+        int ret;
         try {
             byte buff[] = new byte[4];
             pInput.read(buff);
-            ByteBuffer byteBuffer = ByteBuffer.allocate(4);
-            byteBuffer = ByteBuffer.wrap(buff);
-            ret = byteBuffer.order(ByteOrder.BIG_ENDIAN).getInt();
+            ByteBuffer byteBuffer = wrap(buff);
+            ret = byteBuffer.order(BIG_ENDIAN).getInt();
         } catch (IOException e) {
             ret = 0;
         }
@@ -58,29 +61,26 @@ public class NumericIO {
     }
 
     public static short readSwapShort(InputStream pInput) {
-        short ret = 0;
+        short ret;
         try {
             byte buff[] = new byte[2];
             pInput.read(buff);
-            ByteBuffer byteBuffer = ByteBuffer.allocate(2);
-            byteBuffer = ByteBuffer.wrap(buff);
-            ret = byteBuffer.order(ByteOrder.BIG_ENDIAN).getShort();
-
+            ByteBuffer byteBuffer;
+            byteBuffer = wrap(buff);
+            ret = byteBuffer.order(BIG_ENDIAN).getShort();
         } catch (IOException e) {
             ret = 0;
         }
-
         return ret;
     }
 
     public static float readSwapFloat(InputStream pInput) {
-        float ret = 0;
+        float ret;
         try {
             byte buff[] = new byte[4];
             pInput.read(buff);
-            ByteBuffer byteBuffer = ByteBuffer.allocate(4);
-            byteBuffer = ByteBuffer.wrap(buff);
-            ret = byteBuffer.order(ByteOrder.BIG_ENDIAN).getFloat();
+            ByteBuffer byteBuffer = wrap(buff);
+            ret = byteBuffer.order(BIG_ENDIAN).getFloat();
         } catch (IOException e) {
             ret = 0;
         }
@@ -92,14 +92,13 @@ public class NumericIO {
         try {
             pOutput.write(intToBytes(v));
         } catch (IOException e) {
-            System.out.println("NumericIO.writeInt");
-            System.out.println(e.toString());
+            out.println("NumericIO.writeInt");
+            out.println(e.toString());
         }
     }
 
     public static short readShort(InputStream pInput) {
-        short ret = 0;
-
+        short ret;
         try {
             byte buff[] = new byte[2];
             pInput.read(buff);
@@ -115,13 +114,13 @@ public class NumericIO {
         try {
             pOutput.write(shortToBytes(v));
         } catch (IOException e) {
-            System.out.println("NumericIO.writeShort");
-            System.out.println(e.toString());
+            out.println("NumericIO.writeShort");
+            out.println(e.toString());
         }
     }
 
     public static char readUShort(InputStream pInput) {
-        char ret = 0;
+        char ret;
 
         try {
             byte buff[] = new byte[2];
@@ -135,14 +134,13 @@ public class NumericIO {
     }
 
     public static char readSwapUShort(InputStream pInput) {
-        char ret = 0;
+        char ret;
 
         try {
             byte buff[] = new byte[2];
             pInput.read(buff);
-            ByteBuffer byteBuffer = ByteBuffer.allocate(2);
-            byteBuffer = ByteBuffer.wrap(buff);
-            ret = byteBuffer.order(ByteOrder.BIG_ENDIAN).getChar();
+            ByteBuffer byteBuffer = wrap(buff);
+            ret = byteBuffer.order(BIG_ENDIAN).getChar();
         } catch (IOException e) {
             ret = 0;
         }
@@ -154,13 +152,13 @@ public class NumericIO {
         try {
             pOutput.write(ushortToBytes(v));
         } catch (IOException e) {
-            System.out.println("NumericIO.writeShort");
-            System.out.println(e.toString());
+            out.println("NumericIO.writeShort");
+            out.println(e.toString());
         }
     }
 
     public static float readFloat(InputStream pInput) {
-        float ret = 0.0F;
+        float ret;
 
         try {
             byte buff[] = new byte[4];
@@ -177,57 +175,54 @@ public class NumericIO {
         try {
             pOutput.write(floatToBytes(v));
         } catch (IOException e) {
-            System.out.println("NumericIO.writeFloat");
-            System.out.println(e.toString());
+            out.println("NumericIO.writeFloat");
+            out.println(e.toString());
         }
     }
 
     public static void writeSwapInt(OutputStream pOutput, int v) {
         try {
-            ByteBuffer byteBuffer = ByteBuffer.allocate(4);
-            byteBuffer = ByteBuffer.wrap(intToBytes(v));
-            byte[] ret = intToBytes(byteBuffer.order(ByteOrder.BIG_ENDIAN).getInt());
+            ByteBuffer byteBuffer = wrap(intToBytes(v));
+            byte[] ret = intToBytes(byteBuffer.order(BIG_ENDIAN).getInt());
 
             pOutput.write(ret);
         } catch (IOException e) {
-            System.out.println("NumericIO.writeFloat");
-            System.out.println(e.toString());
+            out.println("NumericIO.writeFloat");
+            out.println(e.toString());
         }
     }
 
     public static void writeSwapShort(OutputStream pOutput, short v) {
         try {
-            ByteBuffer byteBuffer = ByteBuffer.allocate(2);
-            byteBuffer = ByteBuffer.wrap(shortToBytes(v));
-            byte[] ret = shortToBytes(byteBuffer.order(ByteOrder.BIG_ENDIAN).getShort());
+            ByteBuffer byteBuffer = wrap(shortToBytes(v));
+            byte[] ret = shortToBytes(byteBuffer.order(BIG_ENDIAN).getShort());
 
             pOutput.write(ret);
         } catch (IOException e) {
-            System.out.println("NumericIO.writeFloat");
-            System.out.println(e.toString());
+            out.println("NumericIO.writeFloat");
+            out.println(e.toString());
         }
     }
 
     public static void writeSwapUShort(OutputStream pOutput, char v) {
         try {
-            ByteBuffer byteBuffer = ByteBuffer.allocate(2);
-            byteBuffer = ByteBuffer.wrap(ushortToBytes(v));
-            byte[] ret = ushortToBytes(byteBuffer.order(ByteOrder.BIG_ENDIAN).getChar());
+            ByteBuffer byteBuffer = wrap(ushortToBytes(v));
+            byte[] ret = ushortToBytes(byteBuffer.order(BIG_ENDIAN).getChar());
 
             pOutput.write(ret);
         } catch (IOException e) {
-            System.out.println("NumericIO.writeFloat");
-            System.out.println(e.toString());
+            out.println("NumericIO.writeFloat");
+            out.println(e.toString());
         }
     }
 
     public static void writeSwapFloat(OutputStream pOutput, float v) {
-        try {                           
+        try {
             byte[] ret = floatBEToBytes(v);
             pOutput.write(ret);
         } catch (IOException e) {
-            System.out.println("NumericIO.writeFloat");
-            System.out.println(e.toString());
+            out.println("NumericIO.writeFloat");
+            out.println(e.toString());
         }
     }
 
@@ -279,22 +274,23 @@ public class NumericIO {
     }
 
     public static byte[] floatBEToBytes(float v) {
-        return intToByteArrayBE(Float.floatToRawIntBits(v));
+        return intToByteArrayBE(floatToRawIntBits(v));
     }
+
     public static byte[] floatToBytes(float v) {
-        int value = Float.floatToIntBits(v);
+        int value = floatToIntBits(v);
         return intToBytes(value);
     }
 
     public static float bytesToFloat(byte buff[]) {
         int val = (buff[0] & 0xff) | ((buff[1] & 0xff) << 8)
                 | ((buff[2] & 0xff) << 16) | ((buff[3] & 0xff) << 24);
-        return Float.intBitsToFloat(val);
+        return intBitsToFloat(val);
     }
-    
-     public static byte[] intToByteArrayBE( int data ) {
+
+    public static byte[] intToByteArrayBE(int data) {
         return new byte[]{(byte) ((data >> 24) & 0xff), (byte) ((data >> 16) & 0xff), (byte) ((data >> 8) & 0xff),
-                (byte) ((data >> 0) & 0xff),};
+            (byte) ((data >> 0) & 0xff),};
     }
-     
+
 }

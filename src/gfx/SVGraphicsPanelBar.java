@@ -10,49 +10,61 @@
  */
 package gfx;
 
-
+import static gfx.SVActor.NORMAL;
+import static gfx.SVActor.SEISMIC;
+import static gfx.SVAxis.AXIS_NORMAL;
+import static gfx.SVGraphicsPanel.SIZE_SCROLLBAR;
+import static java.awt.Adjustable.HORIZONTAL;
+import static java.awt.Adjustable.VERTICAL;
+import static java.awt.Color.black;
+import static java.awt.Color.green;
+import static java.awt.Color.white;
 import java.awt.Dimension;
 import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
-import java.util.Vector;
+import static java.lang.Math.abs;
+import static java.lang.System.out;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import static javax.swing.JOptionPane.showMessageDialog;
 import javax.swing.JScrollBar;
 
 /**
  *
  * @author Williams Lima
  */
-public  class SVGraphicsPanelBar extends javax.swing.JPanel
+public class SVGraphicsPanelBar extends javax.swing.JPanel
         implements java.awt.event.MouseMotionListener,
         java.awt.event.MouseListener,
         java.awt.event.ComponentListener {
 
     public SVGraphicsPanelBar() {
-        m_actorsList = new java.util.Vector<SVActor>();
+        m_actorsList = new ArrayList<>();
 
         m_imageOutOfDate = true;
         m_zoomActive = false;
         m_zooming = false;
-        m_crossLinesColor = java.awt.Color.black;
-        m_rubberColor = java.awt.Color.black;
+        m_crossLinesColor = black;
+        m_rubberColor = black;
 
         addMouseListener(this);
         addMouseMotionListener(this);
         addComponentListener(this);
 
-        m_xyPlots = new java.util.Vector<SVXYPlot>();
+        m_xyPlots = new ArrayList<>();
 
-        m_backgroundColor = java.awt.Color.white;
+        m_backgroundColor = white;
         m_gridStyle = GRID_NONE;
 
         m_showCrossLines = false;
         m_cursorCoord = new SVPoint2D();
 
-        setAxesStyle(gfx.SVActor.SEISMIC);
-        setGridColor(java.awt.Color.green);
-        setGridStyle(SVGraphicsPanelBar.GRID_NONE);
-        setBackground(java.awt.Color.white);
+        setAxesStyle(SEISMIC);
+        setGridColor(green);
+        setGridStyle(GRID_NONE);
+        setBackground(white);
 
         m_plotType = NONE;
 
@@ -95,8 +107,8 @@ public  class SVGraphicsPanelBar extends javax.swing.JPanel
         m_imageOutOfDate = true;
     }
 
-    public Vector<SVActor> getActors() {
-        return m_actorsList;
+    public List<SVActor> getActors() {
+        return Collections.unmodifiableList(m_actorsList);
     }
 
     public void removeAllActors() {
@@ -154,7 +166,7 @@ public  class SVGraphicsPanelBar extends javax.swing.JPanel
     }
 
     /**
-     * 
+     *
      * @param x1min
      * @param x1max
      * @param x2min
@@ -170,12 +182,12 @@ public  class SVGraphicsPanelBar extends javax.swing.JPanel
         if (getAxisY() != null) {
             getAxisY().setLimits(x1min, x1max);
         } else {
-            javax.swing.JOptionPane.showMessageDialog(this, "SVGraph");
+            showMessageDialog(this, "SVGraph");
         }
     }
 
     /**
-     * 
+     *
      * @return ret [0] = x1beg, [1] = x1end, [2] = x2beg, [3] = x2end
      */
     public float[] getAxisLimits() {
@@ -247,7 +259,7 @@ public  class SVGraphicsPanelBar extends javax.swing.JPanel
         g.setColor(getBackground());
         g.fillRect(0, 0, w, h);
 
-        g.setColor(java.awt.Color.black);
+        g.setColor(black);
 
         if ((w > WMIN) && (h > HMIN)) {
             java.awt.Graphics2D g2 = (java.awt.Graphics2D) g;
@@ -272,10 +284,11 @@ public  class SVGraphicsPanelBar extends javax.swing.JPanel
 
         }
 
-    //m_imageOutOfDate = false;
+        //m_imageOutOfDate = false;
     }
 
     // Private methods    
+    @Override
     public void mouseDragged(MouseEvent e) {
         m_cursorCoord.ix = e.getX();
         m_cursorCoord.iy = e.getY();
@@ -283,7 +296,7 @@ public  class SVGraphicsPanelBar extends javax.swing.JPanel
         if (m_zooming || m_onSelect) {
             java.awt.Graphics2D g = (java.awt.Graphics2D) getGraphics();
             g.setColor(m_rubberColor);
-            g.setXORMode(java.awt.Color.white);
+            g.setXORMode(white);
 
             // Erase old rubber box
             g.drawLine(m_rubberX, m_rubberY, m_rubberX + m_rubberW, m_rubberY);
@@ -307,6 +320,7 @@ public  class SVGraphicsPanelBar extends javax.swing.JPanel
 
     }
 
+    @Override
     public void mouseMoved(MouseEvent e) {
         int oldX = m_cursorCoord.ix;
         int oldY = m_cursorCoord.iy;
@@ -317,7 +331,7 @@ public  class SVGraphicsPanelBar extends javax.swing.JPanel
         if (m_showCrossLines) {
             java.awt.Graphics2D g = (java.awt.Graphics2D) getGraphics();
             g.setColor(m_crossLinesColor);
-            g.setXORMode(java.awt.Color.white);
+            g.setXORMode(white);
             if (m_eraseOldCrossLines) {
                 // Erase old cross lines
                 g.drawLine(0, oldY, getWidth(), oldY);
@@ -330,10 +344,12 @@ public  class SVGraphicsPanelBar extends javax.swing.JPanel
         }
     }
 
+    @Override
     public void mouseClicked(MouseEvent e) {
-       System.out.println("Limits: "+getAxisLimits()[0]+" "+getAxisLimits()[1]+" "+getAxisLimits()[2]+" "+getAxisLimits()[3]);
+        out.println("Limits: " + getAxisLimits()[0] + " " + getAxisLimits()[1] + " " + getAxisLimits()[2] + " " + getAxisLimits()[3]);
     }
 
+    @Override
     public void mousePressed(MouseEvent e) {
         if (m_zoomActive || m_selectionActive) {
             m_rubberX = e.getX();
@@ -347,7 +363,7 @@ public  class SVGraphicsPanelBar extends javax.swing.JPanel
             if (m_showCrossLines) {
                 java.awt.Graphics2D g = (java.awt.Graphics2D) getGraphics();
                 g.setColor(m_crossLinesColor);
-                g.setXORMode(java.awt.Color.white);
+                g.setXORMode(white);
                 if (m_eraseOldCrossLines) {
                     // Erase old cross lines
                     g.drawLine(0, oldY, getWidth(), oldY);
@@ -363,6 +379,7 @@ public  class SVGraphicsPanelBar extends javax.swing.JPanel
         }
     }
 
+    @Override
     public void mouseReleased(MouseEvent e) {
         m_selectionActive = false;
         m_onSelect = false;
@@ -377,8 +394,7 @@ public  class SVGraphicsPanelBar extends javax.swing.JPanel
 //            }else{
 //                this.setPreferredSize(new Dimension(this.getParent().getWidth(),this.getParent().getHeight()));
 //            }                        
-
-            if ((Math.abs(m_rubberW) < 4) || (Math.abs(m_rubberH) < 4)) {
+            if ((abs(m_rubberW) < 4) || (abs(m_rubberH) < 4)) {
                 m_x1begb = m_x1beg;
                 m_x1endb = m_x1end;
                 m_x2begb = m_x2beg;
@@ -391,8 +407,8 @@ public  class SVGraphicsPanelBar extends javax.swing.JPanel
                 int p1X = m_rubberX;
                 int p1Y = m_rubberY;
 
-                int rw = Math.abs(p2X - m_rubberX);
-                int rh = Math.abs(p2Y - m_rubberY);
+                int rw = abs(p2X - m_rubberX);
+                int rh = abs(p2Y - m_rubberY);
 
                 int cx = p1X;
                 int cy = p1Y;
@@ -405,7 +421,7 @@ public  class SVGraphicsPanelBar extends javax.swing.JPanel
                     cy = p2Y;
                 }
                 // 
-                if (m_style == SVActor.SEISMIC) {
+                if (m_style == SEISMIC) {
                     SVPoint2D p = new SVPoint2D();
                     p.ix = cx;
                     p.iy = cy;
@@ -447,54 +463,46 @@ public  class SVGraphicsPanelBar extends javax.swing.JPanel
                     m_axisPanelX.setHScrollBarActive(true);
                     m_axisPanelY.setVScrollBarActive(true);
                     svg.clearPanels();
-                    svg.getPanelH().setPreferredSize(new Dimension(this.getWidth(), SVGraphicsPanel.SIZE_SCROLLBAR));
-                    svg.getPanelV().setPreferredSize(new Dimension(SVGraphicsPanel.SIZE_SCROLLBAR, getHeight()));
-                    int vMax = (int) ((m_x1begb *scala) + ( (m_x1end*scala) - (m_x1endb *scala))) +50 ;
-                    int hMax = (int) ((m_x2begb *scala) + ((m_x2end*scala ) - (m_x2endb *scala))) -500 ;
-                    int hVal = ((int) (m_x2begb*scala )) >= hMax ? hMax : (int) (m_x2begb *scala);                    
+                    svg.getPanelH().setPreferredSize(new Dimension(this.getWidth(), SIZE_SCROLLBAR));
+                    svg.getPanelV().setPreferredSize(new Dimension(SIZE_SCROLLBAR, getHeight()));
+                    int vMax = (int) ((m_x1begb * scala) + ((m_x1end * scala) - (m_x1endb * scala))) + 50;
+                    int hMax = (int) ((m_x2begb * scala) + ((m_x2end * scala) - (m_x2endb * scala))) - 500;
+                    int hVal = ((int) (m_x2begb * scala)) >= hMax ? hMax : (int) (m_x2begb * scala);
 //                    System.out.println("vMax: "+vMax+" hMax: "+hMax);
 //                    System.out.println("vMin: "+ (m_x1beg*scala )+" hMin: "+ m_x2beg*scala);
 //                    System.out.println("vVal: "+ (m_x1begb*scala )+" hVal: "+hVal);
 //                    System.out.println(m_x1beg+" "+m_x1end+" "+m_x2beg+" "+m_x2end+" " +
 //                            "\n"+m_x1begb+" "+m_x1endb+" "+m_x2begb+" "+m_x2endb);
-                    JScrollBar hBar = new JScrollBar(JScrollBar.HORIZONTAL,hVal , 5, (int) (m_x2beg*scala), hMax);
-                    JScrollBar vBar = new JScrollBar(JScrollBar.VERTICAL, (int) (m_x1begb*scala ), 5,(int) (m_x1beg*scala), vMax);
-                    hBar.addAdjustmentListener(new AdjustmentListener() {
-
-                        @Override
-                        public void adjustmentValueChanged(AdjustmentEvent e) {
-                            float newVal = (e.getValue() /scala.floatValue()) - m_x2begb;
-                            m_x2begb = m_x2begb + newVal ;
-                            m_x2endb = m_x2endb + newVal ;
-                            m_eraseOldCrossLines = true;
-                            componentResized(null);
-                            m_imageOutOfDate = true;
-                            float[] v= m_axisPanelX.getAxis().getLimitsInitial();
-                            float dv2 = ((v[1]-v[0]+1))/(m_x2end -m_x2beg);
-                            float xmin = (((m_x2begb-m_x2beg)*dv2)+v[0]);
-                            float xmax = (((m_x2endb-m_x2beg)*dv2)+v[0]);                           
-                            m_axisPanelX.getAxis().setLimits(xmin, xmax);
-                            m_axisPanelX.getParent().repaint();                            
-                            repaint();
-                        }
+                    JScrollBar hBar = new JScrollBar(HORIZONTAL, hVal, 5, (int) (m_x2beg * scala), hMax);
+                    JScrollBar vBar = new JScrollBar(VERTICAL, (int) (m_x1begb * scala), 5, (int) (m_x1beg * scala), vMax);
+                    hBar.addAdjustmentListener((AdjustmentEvent e1) -> {
+                        float newVal = (e1.getValue() / scala) - m_x2begb;
+                        m_x2begb = m_x2begb + newVal;
+                        m_x2endb = m_x2endb + newVal;
+                        m_eraseOldCrossLines = true;
+                        componentResized(null);
+                        m_imageOutOfDate = true;
+                        float[] v = m_axisPanelX.getAxis().getLimitsInitial();
+                        float dv2 = ((v[1] - v[0] + 1)) / (m_x2end - m_x2beg);
+                        float xmin = (((m_x2begb - m_x2beg) * dv2) + v[0]);
+                        float xmax = (((m_x2endb - m_x2beg) * dv2) + v[0]);
+                        m_axisPanelX.getAxis().setLimits(xmin, xmax);
+                        m_axisPanelX.getParent().repaint();
+                        repaint();
                     });
-                    vBar.addAdjustmentListener(new AdjustmentListener() {
-
-                        @Override
-                        public void adjustmentValueChanged(AdjustmentEvent e) {
-                            float newVal = (e.getValue()/scala.floatValue() ) - m_x1begb;
-                            m_x1begb = m_x1begb + newVal;
-                            m_x1endb = m_x1endb + newVal;
-                            m_eraseOldCrossLines = true;
-                            componentResized(null);
-                            m_imageOutOfDate = true;
-                            m_axisPanelY.getAxis().setLimits(m_x1begb, m_x1endb + 0.01f);
-                            m_axisPanelY.getParent().repaint();
-                            repaint();
-                        }
+                    vBar.addAdjustmentListener((AdjustmentEvent e1) -> {
+                        float newVal = (e1.getValue() / scala) - m_x1begb;
+                        m_x1begb = m_x1begb + newVal;
+                        m_x1endb = m_x1endb + newVal;
+                        m_eraseOldCrossLines = true;
+                        componentResized(null);
+                        m_imageOutOfDate = true;
+                        m_axisPanelY.getAxis().setLimits(m_x1begb, m_x1endb + 0.01f);
+                        m_axisPanelY.getParent().repaint();
+                        repaint();
                     });
-                    hBar.setPreferredSize(new Dimension(svg.getWidth() - SVGraphicsPanel.SIZE_SCROLLBAR, svg.SIZE_SCROLLBAR));
-                    vBar.setPreferredSize(new Dimension(SVGraphicsPanel.SIZE_SCROLLBAR, svg.getHeight() - svg.SIZE_SCROLLBAR));
+                    hBar.setPreferredSize(new Dimension(svg.getWidth() - SIZE_SCROLLBAR, SIZE_SCROLLBAR));
+                    vBar.setPreferredSize(new Dimension(SIZE_SCROLLBAR, svg.getHeight() - SIZE_SCROLLBAR));
                     svg.addPanels(hBar, vBar);
                 } else {
                     m_axisPanelX.setHScrollBarActive(false);
@@ -514,12 +522,15 @@ public  class SVGraphicsPanelBar extends javax.swing.JPanel
 
     }
 
+    @Override
     public void mouseEntered(MouseEvent e) {
     }
 
+    @Override
     public void mouseExited(MouseEvent e) {
     }
 
+    @Override
     public void componentResized(ComponentEvent arg0) {
         int w = getWidth();
         int h = getHeight();
@@ -531,8 +542,8 @@ public  class SVGraphicsPanelBar extends javax.swing.JPanel
         if (svg.getPanelH().getComponents().length > 0) {
             JScrollBar hBar = (JScrollBar) svg.getPanelH().getComponent(0);
             JScrollBar vBar = (JScrollBar) svg.getPanelV().getComponent(0);
-            hBar.setPreferredSize(new Dimension(svg.getWidth() - SVGraphicsPanel.SIZE_SCROLLBAR, svg.SIZE_SCROLLBAR));
-            vBar.setPreferredSize(new Dimension(SVGraphicsPanel.SIZE_SCROLLBAR, svg.getHeight() - svg.SIZE_SCROLLBAR));
+            hBar.setPreferredSize(new Dimension(svg.getWidth() - SIZE_SCROLLBAR, SIZE_SCROLLBAR));
+            vBar.setPreferredSize(new Dimension(SIZE_SCROLLBAR, svg.getHeight() - SIZE_SCROLLBAR));
             svg.getPanelH().updateUI();
             svg.getPanelV().updateUI();
         }
@@ -540,17 +551,19 @@ public  class SVGraphicsPanelBar extends javax.swing.JPanel
 
     }
 
+    @Override
     public void componentMoved(ComponentEvent arg0) {
     }
 
+    @Override
     public void componentShown(ComponentEvent arg0) {
     }
 
+    @Override
     public void componentHidden(ComponentEvent arg0) {
     }
 
     private boolean windowToWorld(SVPoint2D p) {
-
 
         float xmin, xmax;
 
@@ -558,7 +571,7 @@ public  class SVGraphicsPanelBar extends javax.swing.JPanel
             xmin = m_x2begb;
             xmax = m_x2endb;
 
-            if (m_style == SVActor.NORMAL) {
+            if (m_style == NORMAL) {
                 xmin = m_x1begb;
                 xmax = m_x1endb;
             }
@@ -578,7 +591,7 @@ public  class SVGraphicsPanelBar extends javax.swing.JPanel
             xmin = m_x1begb;
             xmax = m_x1endb;
 
-            if (m_style == SVActor.NORMAL) {
+            if (m_style == NORMAL) {
                 xmin = m_x2begb;
                 xmax = m_x2endb;
             }
@@ -588,7 +601,7 @@ public  class SVGraphicsPanelBar extends javax.swing.JPanel
             x = m_axesBox.x;
             y = m_axesBox.y;
 
-            if (getAxisY().getStyle() == SVAxis.AXIS_NORMAL) {
+            if (getAxisY().getStyle() == AXIS_NORMAL) {
                 p.fy = xmin + (xmax - xmin) * (h - (p.iy - y)) / h;
             } else {
                 p.fy = xmin + (xmax - xmin) * (p.iy - y) / h;
@@ -601,8 +614,8 @@ public  class SVGraphicsPanelBar extends javax.swing.JPanel
         return true;
 
     }    // Variable declarations
-    java.util.Vector<SVXYPlot> m_xyPlots;
-    java.util.Vector<SVActor> m_actorsList;
+    List<SVXYPlot> m_xyPlots;
+    List<SVActor> m_actorsList;
     gfx.SVColorScale m_colorScale = null;
     private java.awt.Color m_backgroundColor;
     private boolean m_showCrossLines;
@@ -657,7 +670,7 @@ public  class SVGraphicsPanelBar extends javax.swing.JPanel
     private int m_lwidth;
     private int m_lheight;
     //
-    java.awt.Color m_boundBoxColor = java.awt.Color.black;
+    java.awt.Color m_boundBoxColor = black;
     //
     private int m_plotType;
     gfx.SVAxis m_axisX = null;

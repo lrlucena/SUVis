@@ -15,13 +15,27 @@ package gfx;
  * @author Williams Lima
  */
 public class SVPoint2D {
-    public int ix; /** X in window coordinates. */
-    public int iy; /** Y in window coordinates. */
-    public float fx; /** X in real user data coordinates. */
-    public float fy;/** Y in real user data coordiantes. */
+
+    public int ix;
+    /**
+     * X in window coordinates.
+     */
+    public int iy;
+    /**
+     * Y in window coordinates.
+     */
+    public float fx;
+    /**
+     * X in real user data coordinates.
+     */
+    public float fy;
+
+    /**
+     * Y in real user data coordiantes.
+     */
 
     @Override
     public String toString() {
-        return "x: "+ix+" y: "+iy+" fx: "+fx+" fy: "+fy;
+        return "x: " + ix + " y: " + iy + " fx: " + fx + " fy: " + fy;
     }
 }

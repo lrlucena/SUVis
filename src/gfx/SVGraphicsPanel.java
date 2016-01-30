@@ -11,8 +11,12 @@
 package gfx;
 
 import java.awt.BorderLayout;
+import static java.awt.BorderLayout.CENTER;
+import static java.awt.BorderLayout.EAST;
+import static java.awt.BorderLayout.SOUTH;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import static java.awt.FlowLayout.LEFT;
 import java.awt.event.ComponentListener;
 import java.awt.event.ContainerListener;
 import java.awt.event.FocusListener;
@@ -24,7 +28,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelListener;
 import java.beans.PropertyChangeListener;
 import java.beans.VetoableChangeListener;
-import java.util.Vector;
+import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.event.AncestorListener;
@@ -37,23 +41,21 @@ public class SVGraphicsPanel extends javax.swing.JPanel {
 
     public SVGraphicsPanel() {
         super(new BorderLayout());
-        panelH = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        panelV = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        panelH = new JPanel(new FlowLayout(LEFT, 0, 0));
+        panelV = new JPanel(new FlowLayout(LEFT, 0, 0));
         panelCenter = new SVGraphicsPanelBar();
-        this.add(panelCenter, BorderLayout.CENTER);
-        this.add(panelH, BorderLayout.SOUTH);
-        this.add(panelV, BorderLayout.EAST);
+        this.add(panelCenter, CENTER);
+        this.add(panelH, SOUTH);
+        this.add(panelV, EAST);
 
 //        this.setViewportView(panelCenter);
 //        this.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 //        this.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-
     }
 
     public void addPanels(JScrollBar hBar, JScrollBar vBar) {
         getPanelH().add(hBar);
         getPanelV().add(vBar);
-        ;
         validate();
     }
 
@@ -61,16 +63,19 @@ public class SVGraphicsPanel extends javax.swing.JPanel {
         panelCenter.addXYPlot(plot);
     }
 
-    public void setAxisPanelX(AxisPanel ap){
+    public void setAxisPanelX(AxisPanel ap) {
         panelCenter.setAxisPanelX(ap);
     }
-    public void setAxisPanelY(AxisPanel ap){
+
+    public void setAxisPanelY(AxisPanel ap) {
         panelCenter.setAxisPanelY(ap);
     }
+
     @Deprecated
     public void setAxisX(SVAxis axis) {
         panelCenter.setAxisX(axis);
     }
+
     @Deprecated
     public void setAxisY(SVAxis axis) {
         panelCenter.setAxisY(axis);
@@ -85,7 +90,7 @@ public class SVGraphicsPanel extends javax.swing.JPanel {
 
     }
 
-    public Vector<SVActor> getActors() {
+    public List<SVActor> getActors() {
         return panelCenter.getActors();
     }
 
@@ -129,7 +134,6 @@ public class SVGraphicsPanel extends javax.swing.JPanel {
     public float[] getAxisLimits() {
         return panelCenter.getAxisLimits();
     }
-
 
     //override methods of events
     @Override
@@ -204,8 +208,6 @@ public class SVGraphicsPanel extends javax.swing.JPanel {
         panelCenter.addVetoableChangeListener(listener);
     }
 
- 
-
     public void clearPanels() {
         getPanelH().removeAll();
         getPanelV().removeAll();
@@ -244,7 +246,7 @@ public class SVGraphicsPanel extends javax.swing.JPanel {
      * @param visibleScrollBar the visibleScrollBar to set
      */
     public void setVisibleScrollBar(boolean visibleScrollBar) {
-        this.visibleScrollBar = visibleScrollBar;       
+        this.visibleScrollBar = visibleScrollBar;
     }
 
 }

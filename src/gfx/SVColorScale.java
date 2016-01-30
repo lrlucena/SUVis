@@ -1,7 +1,14 @@
 package gfx;
 
 import java.awt.GraphicsConfiguration;
+import static java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment;
 import java.awt.image.BufferedImage;
+import static java.awt.image.BufferedImage.TYPE_INT_RGB;
+import static java.lang.Math.abs;
+import static java.lang.String.format;
+import static java.lang.System.out;
+import static utils.Sorting.qkfind;
+
 /*
  * ColorScale.java
  *
@@ -11,21 +18,22 @@ import java.awt.image.BufferedImage;
  * 
  * Project: SUVis
  */
-
 /**
  *
  * @author Williams Lima, williams_al@gmx.com
  */
 public class SVColorScale extends SVActor {
 
-    /** Creates a new instance of SciVisImage */
+    /**
+     * Creates a new instance of SciVisImage
+     */
     public SVColorScale(int pBytesPerPixel, int pByteOrder) {
         m_style = SEISMIC;
 
         m_bytesPerPixel = pBytesPerPixel;
         m_byteOrder = pByteOrder;
 
-        java.awt.GraphicsEnvironment ge = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment();
+        java.awt.GraphicsEnvironment ge = getLocalGraphicsEnvironment();
         m_gc = ge.getDefaultScreenDevice().getDefaultConfiguration();
 
         m_autoClip = true;
@@ -92,11 +100,6 @@ public class SVColorScale extends SVActor {
 
     }
 
- 
-    
-
-
-
     @Override
     public void setData(float pData[], int pN1, float pF1, float pD1,
             int pN2, float pF2, float pD2) {
@@ -127,11 +130,11 @@ public class SVColorScale extends SVActor {
         m_imageOutOfDate = true;
 
     }
-    
-    public void setColormap(int type, int map){
-        if(type == RGB){
+
+    public void setColormap(int type, int map) {
+        if (type == RGB) {
             setRGBColormap(map);
-        }else{
+        } else {
             setHSVColormap(map);
         }
     }
@@ -208,8 +211,8 @@ public class SVColorScale extends SVActor {
         m_autoClip = true;
         m_imageOutOfDate = true;
     }
-    
-    public void setColorMapType(int type){
+
+    public void setColorMapType(int type) {
         m_colormapType = type;
     }
 
@@ -252,10 +255,10 @@ public class SVColorScale extends SVActor {
         m_autoBalance = false;
     }
 
-    public int getCurrColorMapIndex(){
+    public int getCurrColorMapIndex() {
         return m_currColormapIndex;
     }
-    
+
     public void setClipParameters(float clip, float bclip, float wclip) {
 //           System.out.println("229 m_clip =" +  m_clip );
 //           System.out.println("229  m_wclip"  + m_wclip );
@@ -313,7 +316,7 @@ public class SVColorScale extends SVActor {
                 }
             } else {
                 for (iz = 0; iz < nz; ++iz) {
-                    temp[iz] = Math.abs(m_data[iz]);
+                    temp[iz] = abs(m_data[iz]);
                 }
             }
 
@@ -326,7 +329,6 @@ public class SVColorScale extends SVActor {
                 }
                 m_bperc = bperc;       //coloquei 13/04/09
 
-
                 iz = (int) (nz * bperc / 100.0f);
                 if (iz < 0) {
                     iz = 0;
@@ -334,7 +336,7 @@ public class SVColorScale extends SVActor {
                 if (iz > nz - 1) {
                     iz = nz - 1;
                 }
-                utils.Sorting.qkfind(iz, nz, temp);
+                qkfind(iz, nz, temp);
                 bclip = temp[iz];
             } else {
                 bclip = m_bclip;
@@ -353,7 +355,7 @@ public class SVColorScale extends SVActor {
                 if (iz > nz - 1) {
                     iz = nz - 1;
                 }
-                utils.Sorting.qkfind(iz, nz, temp);
+                qkfind(iz, nz, temp);
                 /* Modded by GCP to balance bclip & wclip */
                 if (balance == 0) {
                     wclip = temp[iz];
@@ -386,8 +388,8 @@ public class SVColorScale extends SVActor {
         m_x2endb = m_f2 + m_i2end * m_d2;
 
         /* allocate space for image bytes */
-        m_n1c = 1 + Math.abs(m_i1end - m_i1beg);
-        m_n2c = 1 + Math.abs(m_i2end - m_i2beg);
+        m_n1c = 1 + abs(m_i1end - m_i1beg);
+        m_n2c = 1 + abs(m_i2end - m_i2beg);
 
         m_cz = new short[m_n1c * m_n2c];
 
@@ -448,7 +450,7 @@ public class SVColorScale extends SVActor {
         if ((pWidth > 0) && (pHeight > 0)) {
             int i;
             int rgbArray[] = new int[pWidth * pHeight];
-            int[] tcpixels = null;
+            int[] tcpixels;
             if (m_colormapType == RGB) {
                 tcpixels = m_cmap.getRGBTrueColorPixels(cmap);
             } else {
@@ -465,8 +467,7 @@ public class SVColorScale extends SVActor {
                 }
             }
 
-            img = m_gc.createCompatibleImage(pWidth, pHeight,
-                    BufferedImage.TYPE_INT_RGB);
+            img = m_gc.createCompatibleImage(pWidth, pHeight, TYPE_INT_RGB);
 
             img.setRGB(0, 0, pWidth, pHeight, rgbArray, 0, pWidth);
         }
@@ -495,74 +496,71 @@ public class SVColorScale extends SVActor {
         return bout;
     }
 
-    /*******************************************************************************
-     * Notes:
-     * The arrays zin and zout must passed as pointers to the first element of
-     * a two-dimensional contiguous array of unsigned char values.
+    /**
+     * *****************************************************************************
+     * Notes: The arrays zin and zout must passed as pointers to the first
+     * element of a two-dimensional contiguous array of unsigned char values.
      *
-     * Constant extrapolation of zin is used to compute zout for
-     * output x and y outside the range of input x and y.
+     * Constant extrapolation of zin is used to compute zout for output x and y
+     * outside the range of input x and y.
      *
      ******************************************************************************
      *
-     * Author:  James Gunning, CSIRO Petroleum 1999. Hacked from
-     * intl2b() by Dave Hale, Colorado School of Mines, c. 1989-1991
-     *****************************************************************************/
-    /**************** end self doc ********************************/
+     * Author: James Gunning, CSIRO Petroleum 1999. Hacked from intl2b() by Dave
+     * Hale, Colorado School of Mines, c. 1989-1991
+     * ***************************************************************************
+     */
+    /**
+     * ************** end self doc *******************************
+     */
     private short[] intl2b_block(int nxin, float dxin, float fxin,
             int nyin, float dyin, float fyin, short zin[],
             int nxout, float dxout, float fxout,
-            int nyout, float dyout, float fyout) /*****************************************************************************
+            int nyout, float dyout, float fyout) /**
+     * ***************************************************************************
      * blocky interpolation of a 2-D array of bytes: gridblock effect
-     ******************************************************************************
-     * Input:
-     * nxin		number of x samples input (fast dimension of zin)
-     * dxin		x sampling interval input
-     * fxin		first x sample input
-     * nyin		number of y samples input (slow dimension of zin)
-     * dyin		y sampling interval input
-     * fyin		first y sample input
-     * zin		    array[nyin][nxin] of input samples (see notes)
-     * nxout		number of x samples output (fast dimension of zout)
-     * dxout		x sampling interval output
-     * fxout		first x sample output
-     * nyout		number of y samples output (slow dimension of zout)
-     * dyout		y sampling interval output
-     * fyout		first y sample output
+     * *****************************************************************************
+     * Input: nxin	number of x samples input (fast dimension of zin) dxin	x
+     * sampling interval input fxin	first x sample input nyin	number of y
+     * samples input (slow dimension of zin) dyin	y sampling interval input fyin
+     * first y sample input zin	array[nyin][nxin] of input samples (see notes)
+     * nxout	number of x samples output (fast dimension of zout) dxout	x
+     * sampling interval output fxout	first x sample output nyout	number of y
+     * samples output (slow dimension of zout) dyout	y sampling interval output
+     * fyout	first y sample output
      *
-     * Output:
-     *   return value		array[nyout][nxout] of output samples (see notes)
-     ******************************************************************************
-     * Notes:
-     * The array zin must passed as pointers to the first element of
-     * a two-dimensional contiguous array of unsigned char values.
+     * Output: return value	array[nyout][nxout] of output samples (see notes)
+     * *****************************************************************************
+     * Notes: The array zin must passed as pointers to the first element of a
+     * two-dimensional contiguous array of unsigned char values.
      *
-     * Constant extrapolation of zin is used to compute zout for
-     * output x and y outside the range of input x and y.
+     * Constant extrapolation of zin is used to compute zout for output x and y
+     * outside the range of input x and y.
      *
-     * Mapping of bytes between arrays is done to preserve appearance of `gridblocks':
-     * no smooth interpolation is performed.
+     * Mapping of bytes between arrays is done to preserve appearance of
+     * `gridblocks': no smooth interpolation is performed.
      *
-     *****************************************************************************/
+     ****************************************************************************
+     */
     {
         int ixout, iyout, iin, jin;
         float xoff, yoff;
         short zout[] = new short[nxout * nyout];
 
-        xoff =
-                fxout + 0.5f * dxin - fxin;
-        yoff =
-                fyout + 0.5f * dyin - fyin;
+        xoff
+                = fxout + 0.5f * dxin - fxin;
+        yoff
+                = fyout + 0.5f * dyin - fyin;
         for (iyout = 0; iyout
                 < nyout; iyout++) {
             jin = (int) ((iyout * dyout + yoff) / dyin);
-            jin =
-                    (int) MIN(nyin - 1, MAX(jin, 0));
+            jin
+                    = (int) MIN(nyin - 1, MAX(jin, 0));
             for (ixout = 0; ixout
                     < nxout; ixout++) {
                 iin = (int) ((ixout * dxout + xoff) / dxin);
-                iin =
-                        (int) MIN(nxin - 1, MAX(iin, 0));
+                iin
+                        = (int) MIN(nxin - 1, MAX(iin, 0));
                 zout[nxout * iyout + ixout] = zin[nxin * jin + iin];
             }
 
@@ -586,54 +584,44 @@ public class SVColorScale extends SVActor {
     private void intl2b(int nxin, float dxin, float fxin,
             int nyin, float dyin, float fyin, short zin[],
             int nxout, float dxout, float fxout,
-            int nyout, float dyout, float fyout, short zout[]) /*****************************************************************************
+            int nyout, float dyout, float fyout, short zout[]) /**
+     * ***************************************************************************
      * bilinear interpolation of a 2-D array of bytes
-     ******************************************************************************
-     * Input:
-     * nxin		number of x samples input (fast dimension of zin)
-     * dxin		x sampling interval input
-     * fxin		first x sample input
-     * nyin		number of y samples input (slow dimension of zin)
-     * dyin		y sampling interval input
-     * fyin		first y sample input
-     * zin		array[nyin][nxin] of input samples (see notes)
-     * nxout		number of x samples output (fast dimension of zout)
-     * dxout		x sampling interval output
-     * fxout		first x sample output
-     * nyout		number of y samples output (slow dimension of zout)
-     * dyout		y sampling interval output
-     * fyout		first y sample output
+     * *****************************************************************************
+     * Input: nxin	number of x samples input (fast dimension of zin) dxin	x
+     * sampling interval input fxin	first x sample input nyin	number of y
+     * samples input (slow dimension of zin) dyin	y sampling interval input fyin
+     * first y sample input zin	array[nyin][nxin] of input samples (see notes)
+     * nxout	number of x samples output (fast dimension of zout) dxout	x
+     * sampling interval output fxout	first x sample output nyout	number of y
+     * samples output (slow dimension of zout) dyout	y sampling interval output
+     * fyout	first y sample output
      *
-     * Output:
-     * zout		array[nyout][nxout] of output samples (see notes)
-     ******************************************************************************
-     * Notes:
-     * The arrays zin and zout must passed as pointers to the first element of
-     * a two-dimensional contiguous array of unsigned char values.
+     * Output: zout	array[nyout][nxout] of output samples (see notes)
+     * *****************************************************************************
+     * Notes: The arrays zin and zout must passed as pointers to the first
+     * element of a two-dimensional contiguous array of unsigned char values.
      *
-     * Constant extrapolation of zin is used to compute zout for
-     * output x and y outside the range of input x and y.
+     * Constant extrapolation of zin is used to compute zout for output x and y
+     * outside the range of input x and y.
      *
-     * For efficiency, this function builds a table of interpolation
-     * coefficents pre-multiplied by byte values.  To keep the table
-     * reasonably small, the interpolation does not distinguish
-     * between x and y values that differ by less than dxin/ICMAX
-     * and dyin/ICMAX, respectively, where ICMAX is a parameter
-     * defined above.
-     ******************************************************************************
-     * Author:  Dave Hale, Colorado School of Mines, 07/02/89
-     * Modified:  Dave Hale, Colorado School of Mines, 05/30/90
-     * Changed function to interpolate unsigned char
-     * instead of signed char, since many color tables and
-     * image processing functions (e.g., PostScript) require
-     * bytes with a maximum range of 0 to 255.
-     * Modified:  Dave Hale, Colorado School of Mines, 06/01/91
-     * Changed computation of coefficient table to avoid
-     * errors due to truncation in float to fix.  Old code
-     * sometimes caused interpolated values to be less than
-     * the minimum of the byte values being interpolated or
+     * For efficiency, this function builds a table of interpolation coefficents
+     * pre-multiplied by byte values. To keep the table reasonably small, the
+     * interpolation does not distinguish between x and y values that differ by
+     * less than dxin/ICMAX and dyin/ICMAX, respectively, where ICMAX is a
+     * parameter defined above.
+     * *****************************************************************************
+     * Author: Dave Hale, Colorado School of Mines, 07/02/89 Modified: Dave
+     * Hale, Colorado School of Mines, 05/30/90 Changed function to interpolate
+     * unsigned char instead of signed char, since many color tables and image
+     * processing functions (e.g., PostScript) require bytes with a maximum
+     * range of 0 to 255. Modified: Dave Hale, Colorado School of Mines,
+     * 06/01/91 Changed computation of coefficient table to avoid errors due to
+     * truncation in float to fix. Old code sometimes caused interpolated values
+     * to be less than the minimum of the byte values being interpolated or
      * greater than the maximum of the values being interpolated.
-     *****************************************************************************/
+     * ***************************************************************************
+     */
     {
         int ixout, iyout, ic, ib, iyin, iyinl = 1;
         float xout, yout, rxin, ryin, frac;
@@ -663,13 +651,13 @@ public class SVColorScale extends SVActor {
 
         /* get workspace */
         kzin = new int[nxout];
-        kic =
-                new int[nxout];
+        kic
+                = new int[nxout];
 
-        temp1 =
-                new short[nxout];
-        temp2 =
-                new short[nxout];
+        temp1
+                = new short[nxout];
+        temp2
+                = new short[nxout];
 
         /* pre-compute indices for fast 1-D interpolation along x axis */
         for (ixout = 0, xout = fxout;
@@ -685,10 +673,10 @@ public class SVColorScale extends SVActor {
                 kic[ixout] = ICMAX * 256;
             } else {
                 kzin[ixout] = (int) rxin;
-                frac =
-                        rxin - (int) rxin;
-                ic =
-                        (int) (frac * ICMAX + 0.5);
+                frac
+                        = rxin - (int) rxin;
+                ic
+                        = (int) (frac * ICMAX + 0.5);
                 kic[ixout] = ic * 256;
             }
 
@@ -701,8 +689,8 @@ public class SVColorScale extends SVActor {
 
             /* compute index of input y, clipped to range of input y */
             ryin = MAX(0, MIN(nyin - 1, (yout - fyin) / dyin));
-            iyin =
-                    (int) MAX(0, MIN(nyin - 2, ryin));
+            iyin
+                    = (int) MAX(0, MIN(nyin - 2, ryin));
 
             /* if output y is not between current input y */
             if (iyin != iyinl || iyout == 0) {
@@ -712,10 +700,10 @@ public class SVColorScale extends SVActor {
 
                     /* swap 2nd and 1st temp; compute 2nd temp */
                     temp = temp1;
-                    temp1 =
-                            temp2;
-                    temp2 =
-                            temp;
+                    temp1
+                            = temp2;
+                    temp2
+                            = temp;
                     intl2bx(nxout, kzin, kic, ICMAX,
                             table, zin, (iyin + 1) * nxin, temp2, 0);
                     /* else if 1st temporary vector is still useful */
@@ -723,10 +711,10 @@ public class SVColorScale extends SVActor {
 
                     /* swap 1st and 2nd temp; compute 1st temp */
                     temp = temp1;
-                    temp1 =
-                            temp2;
-                    temp2 =
-                            temp;
+                    temp1
+                            = temp2;
+                    temp2
+                            = temp;
 
                     intl2bx(nxout, kzin, kic, ICMAX,
                             table, zin, iyin * nxin, temp1, 0);
@@ -749,8 +737,8 @@ public class SVColorScale extends SVActor {
 
             /* compute index of interpolation coefficient */
             frac = ryin - iyin;
-            ic =
-                    (int) (frac * ICMAX + 0.5f);
+            ic
+                    = (int) (frac * ICMAX + 0.5f);
 
             /* linearly interpolate output vector by table lookup */
             intl2by(nxout, ic, ICMAX, table,
@@ -761,17 +749,19 @@ public class SVColorScale extends SVActor {
     }
 
     private void intl2bx(int nxout, int kzin[], int kic[], int icmax,
-            short table[], short zin[], int offset_zin, short zout[], int offset_zout) /****************************************************************************
+            short table[], short zin[], int offset_zin, short zout[], int offset_zout) /**
+     * **************************************************************************
      * interpolate between input x values (FOR INTERNAL USE by intl2b)
-     ****************************************************************************/
+     * **************************************************************************
+     */
     {
         int ixout, jzin, jic;
 
         for (ixout = 0; ixout
                 < nxout; ixout++) {
             jzin = kzin[ixout];
-            jic =
-                    kic[ixout];
+            jic
+                    = kic[ixout];
             zout[ixout + offset_zout] = table[icmax * 256 + (int) zin[jzin + offset_zin] - jic];
             zout[ixout + offset_zout] += table[(int) zin[jzin + 1 + offset_zin] + jic];
         }
@@ -779,9 +769,11 @@ public class SVColorScale extends SVActor {
     }
 
     private void intl2by(int nxout, int ic, int icmax, short table[],
-            short temp1[], short temp2[], short zout[], int offset_zout) /****************************************************************************
+            short temp1[], short temp2[], short zout[], int offset_zout) /**
+     * **************************************************************************
      * interpolate between input y values (FOR INTERNAL USE by intl2b)
-     ****************************************************************************/
+     * **************************************************************************
+     */
     {
         int ixout;
 
@@ -799,30 +791,30 @@ public class SVColorScale extends SVActor {
         short zin[] = new short[4];
         short zout[] = new short[16];
 
-        nxin =
-                2;
-        dxin =
-                1.0f;
-        fxin =
-                0.0f;
-        nyin =
-                2;
-        dyin =
-                1.0f;
-        fyin =
-                0.0f;
-        nxout =
-                4;
-        dxout =
-                dxin * (nxin - 1) / (nxout - 1);
-        fxout =
-                0.0f;
-        nyout =
-                4;
-        dyout =
-                dyin * (nyin - 1) / (nyout - 1);
-        fyout =
-                0.0f;
+        nxin
+                = 2;
+        dxin
+                = 1.0f;
+        fxin
+                = 0.0f;
+        nyin
+                = 2;
+        dyin
+                = 1.0f;
+        fyin
+                = 0.0f;
+        nxout
+                = 4;
+        dxout
+                = dxin * (nxin - 1) / (nxout - 1);
+        fxout
+                = 0.0f;
+        nyout
+                = 4;
+        dyout
+                = dyin * (nyin - 1) / (nyout - 1);
+        fyout
+                = 0.0f;
 
         zin[0 * nxin + 0] = 41;
         zin[0 * nxin + 1] = 99;
@@ -835,7 +827,7 @@ public class SVColorScale extends SVActor {
                 < nyout; iyout++) {
             for (ixout = 0; ixout
                     < nxout; ixout++) {
-                System.out.println(String.format("zout[%d][%d] = %d\n",
+                out.println(format("zout[%d][%d] = %d%n",
                         iyout, ixout, zout[iyout * nxout + ixout]));
             }
 
@@ -895,7 +887,8 @@ public class SVColorScale extends SVActor {
     short[] m_czb;
     short[] m_cz;
     // Constants
-    private final int ICMAX = 99; /* must be odd, so that ICMAC-ic!=ic, for ic=0 to ICMAX/2! */
+    private final int ICMAX = 99;
+    /* must be odd, so that ICMAC-ic!=ic, for ic=0 to ICMAX/2! */
 
     public final int NTABLE = ICMAX + 1;
     public final int HSV_MAX = 13;

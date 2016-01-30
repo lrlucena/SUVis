@@ -1,4 +1,5 @@
 package usrdata;
+
 /*
  * SUTrace.java
  *
@@ -10,6 +11,13 @@ package usrdata;
  */
 
 import java.io.*;
+import static java.lang.Float.SIZE;
+import static java.lang.System.arraycopy;
+import static java.lang.System.out;
+import static usrdata.NumericIO.readFloat;
+import static usrdata.NumericIO.readSwapFloat;
+import static usrdata.NumericIO.writeFloat;
+import static usrdata.NumericIO.writeSwapFloat;
 
 /**
  * The SUTrace class represents a SU trace (Header plus data)
@@ -26,9 +34,7 @@ public class SUTrace {
 
     public void setData(float pData[]) {
         m_data = new float[pData.length];
-        for (int i = 0; i < m_data.length; i++) {
-            m_data[i] = pData[i];
-        }
+        arraycopy(pData, 0, m_data, 0, m_data.length);
     }
 
     public float[] getData() {
@@ -37,9 +43,7 @@ public class SUTrace {
         if (m_data != null) {
             if (m_data.length > 0) {
                 ret = new float[m_data.length];
-                for (int i = 0; i < ret.length; i++) {
-                    ret[i] = m_data[i];
-                }
+                arraycopy(m_data, 0, ret, 0, ret.length);
             }
         }
 
@@ -60,18 +64,18 @@ public class SUTrace {
             char ns = m_header.ns;
             if (ns > 0) {
                 if (pSkipData) {
-                    pInput.skip(ns * Float.SIZE / 8);
+                    pInput.skip(ns * SIZE / 8);
                 } else {
                     m_data = new float[ns];
                     for (char i = 0; i < ns; i++) {
 
-                        m_data[i] = NumericIO.readFloat(pInput);
+                        m_data[i] = readFloat(pInput);
                     }
                 }
             }
         } catch (IOException e) {
-            System.out.println("SUTrace.readFromFile");
-            System.out.println("\t" + e.toString());
+            out.println("SUTrace.readFromFile");
+            out.println("\t" + e.toString());
         }
     }
 
@@ -85,21 +89,21 @@ public class SUTrace {
             char ns = m_header.ns;
             if (ns > 0) {
                 if (pSkipData) {
-                    pInput.skip(ns * Float.SIZE / 8);
+                    pInput.skip(ns * SIZE / 8);
                 } else {
                     m_data = new float[ns];
                     for (char i = 0; i < ns; i++) {
                         if (xdrFlag) {
-                            m_data[i] = NumericIO.readSwapFloat(pInput);
+                            m_data[i] = readSwapFloat(pInput);
                         } else {
-                            m_data[i] = NumericIO.readFloat(pInput);
+                            m_data[i] = readFloat(pInput);
                         }
                     }
                 }
             }
         } catch (IOException e) {
-            System.out.println("SUTrace.readFromFile");
-            System.out.println("\t" + e.toString());
+            out.println("SUTrace.readFromFile");
+            out.println("\t" + e.toString());
         }
     }
 
@@ -108,25 +112,25 @@ public class SUTrace {
         char ns = m_header.ns;
         try {
             for (char i = 0; i < ns; i++) {
-                NumericIO.writeFloat(pOutput, m_data[i]);
+                writeFloat(pOutput, m_data[i]);
             }
         } catch (NullPointerException ex) {
         }
     }
 
     public void writeToFile(FileOutputStream pOutput, boolean xdrFlag) {
-        if(xdrFlag){
+        if (xdrFlag) {
             m_header.writeToFileXDR(pOutput);
-        }else{
-        m_header.writeToFile(pOutput);
+        } else {
+            m_header.writeToFile(pOutput);
         }
         char ns = m_header.ns;
         try {
             for (char i = 0; i < ns; i++) {
                 if (xdrFlag) {
-                    NumericIO.writeSwapFloat(pOutput, m_data[i]);
+                    writeSwapFloat(pOutput, m_data[i]);
                 } else {
-                    NumericIO.writeFloat(pOutput, m_data[i]);
+                    writeFloat(pOutput, m_data[i]);
                 }
             }
         } catch (NullPointerException ex) {

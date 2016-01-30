@@ -1,4 +1,5 @@
 package usrdata;
+
 /*
  * SUSectionEnsemble.java 
  *
@@ -11,8 +12,10 @@ package usrdata;
  * 
  */
 import java.io.IOException;
-import java.util.Vector;
+import java.util.List;
 import java.io.FileInputStream;
+import static java.lang.System.out;
+import java.util.ArrayList;
 
 /**
  *
@@ -20,11 +23,13 @@ import java.io.FileInputStream;
  */
 public class SUSectionEnsemble {
 
-    /** Creates a new instance of SUSectionEnsemble */
+    /**
+     * Creates a new instance of SUSectionEnsemble
+     */
     public SUSectionEnsemble() {
     }
 
-    public static int getGatherSorting(String pFilePath, Vector<Integer> pIDs, Vector<Integer> pTracesPerSection) {
+    public static int getGatherSorting(String pFilePath, List<Integer> pIDs, List<Integer> pTracesPerSection) {
         if (isSortedBy("CDP", pFilePath, pIDs, pTracesPerSection)) {
             return CDP;
         } else if (isSortedBy("CS", pFilePath, pIDs, pTracesPerSection)) {
@@ -38,13 +43,13 @@ public class SUSectionEnsemble {
         return Unknown;
     }
 
-    private static boolean isSortedBy(String pKey, String pFilePath, Vector<Integer> pIDs, Vector<Integer> pTracesPerSection) {
+    private static boolean isSortedBy(String pKey, String pFilePath, List<Integer> pIDs, List<Integer> pTracesPerSection) {
         try {
             FileInputStream dataFile = new FileInputStream(pFilePath);
 
             int keyListCount = 0;
-            Vector<Integer> keyListIDs = new Vector<Integer>();
-            Vector<Integer> listTracesPerKey = new Vector<Integer>();
+            List<Integer> keyListIDs = new ArrayList<>();
+            List<Integer> listTracesPerKey = new ArrayList<>();
 
             int currKeyValue = 0;
             int keyValue = 0;
@@ -104,14 +109,14 @@ public class SUSectionEnsemble {
                 return true;
             }
         } catch (IOException e) {
-            System.out.println("SUSectionEnsemble.isSortedBy");
-            System.out.println(e.toString());
+            out.println("SUSectionEnsemble.isSortedBy");
+            out.println(e.toString());
         }
 
         return false;
 
     }
-    Vector<SUSection> m_sections = new Vector<SUSection>();
+    List<SUSection> m_sections = new ArrayList<>();
     public static final int Unknown = 0;
     public static final int AsRecorded = 1;
     public static final int CDP = 2;

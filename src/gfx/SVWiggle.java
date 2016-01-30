@@ -10,10 +10,14 @@
  */
 package gfx;
 
+import static java.awt.Color.black;
 import java.awt.GraphicsConfiguration;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Path2D;
 import java.awt.image.BufferedImage;
+import static java.lang.Math.PI;
+import static java.lang.Math.abs;
+import static utils.Sorting.qkfind;
 
 /**
  *
@@ -22,7 +26,7 @@ import java.awt.image.BufferedImage;
 public class SVWiggle extends SVActor {
 
     public SVWiggle() {
-        
+
         m_xcur = 1.0f;
         xc = new float[NS * 2];
         zc = new float[NS * 2];
@@ -30,8 +34,6 @@ public class SVWiggle extends SVActor {
 
         m_computeSamplingValues = true;
     }
-
-
 
     @Override
     public void paint(java.awt.Graphics g) {
@@ -100,7 +102,7 @@ public class SVWiggle extends SVActor {
             int iz;
 
             for (iz = 0; iz < nz; ++iz) {
-                temp[iz] = Math.abs(m_data[iz]);
+                temp[iz] = abs(m_data[iz]);
             }
 
             iz = (int) (nz * perc / 100.0);
@@ -111,7 +113,7 @@ public class SVWiggle extends SVActor {
             if (iz > nz - 1) {
                 iz = nz - 1;
             }
-            utils.Sorting.qkfind(iz, nz, temp);
+            qkfind(iz, nz, temp);
             clip = temp[iz];
         }
 
@@ -150,7 +152,7 @@ public class SVWiggle extends SVActor {
 
                 /* determine pads for wiggle excursion along axis 2 */
                 m_xcur = 1.0f;
-                m_xcur = Math.abs(m_xcur);
+                m_xcur = abs(m_xcur);
                 if (n2in > 1) {
                     m_xcur *= (x2max - x2min) / (n2in - 1);
                 }
@@ -194,7 +196,7 @@ public class SVWiggle extends SVActor {
                 AffineTransform t = g2.getTransform();
                 g2.translate(m_x, m_y);
                 if (m_style == NORMAL) {
-                    g2.rotate(-Math.PI / 2);
+                    g2.rotate(-PI / 2);
                     g2.translate(-m_height, 0);
                 }
 
@@ -219,35 +221,28 @@ public class SVWiggle extends SVActor {
 
     private void polyWiggle(java.awt.Graphics2D g, int n, int iz, float[] z, float zmin, float zmax, float zbase,
             float x2, float yzmin, float yzmax, float xfirst, float xlast, int ifill,
-            String tracecolor) /*************************************************************************
+            String tracecolor) /**
+     * ***********************************************************************
      * Williams: This code was adapted from psWiggle
      *
-    polyWiggle - draw polygonal wiggle-trace with (optional) area-fill
+     * polyWiggle - draw polygonal wiggle-trace with (optional) area-fill
+     * *************************************************************************
+     * Inputs: n	number of samples to draw z	array to draw zmin	z values below
+     * zmin will be clipped zmax	z values above zmax will be clipped zbase	z
+     * values between zbase and either zmin or zmax will be filled yzmin
+     * y-coordinate corresponding to zmin yzmax	y-coordinate corresponding to
+     * zmax xfirst	x-coordinate corresponding to z[0] xlast	x-coordinate
+     * corresponding to z[n-1] fill	= 0 for no fill > 0 for fill between zbase
+     * and zmax < 0 for fill between zbase and zmin +2 for fill solid between
+     * zbase and zmax grey between zbase and zmin -2 for fill solid between
+     * zbase and zmin grey between zbase and zmax SHADING: 2<= abs(fill) <=5
+     * abs(fill)=2 light grey abs(fill)=5 black tracecolor	pointer to trace
+     * color, needed to restore from grey plotting
+     * *************************************************************************
+     * NOTES: Williams: Please look at original psWiggle.c Original psWiggle
+     * credits: Author: Dave Hale, Colorado School of Mines, 07/03/89
      **************************************************************************
-    Inputs:
-    n		number of samples to draw
-    z		array to draw
-    zmin		z values below zmin will be clipped
-    zmax		z values above zmax will be clipped
-    zbase		z values between zbase and either zmin or zmax will be filled
-    yzmin		y-coordinate corresponding to zmin
-    yzmax		y-coordinate corresponding to zmax
-    xfirst		x-coordinate corresponding to z[0]
-    xlast		x-coordinate corresponding to z[n-1]
-    fill		= 0 for no fill
-    > 0 for fill between zbase and zmax
-    < 0 for fill between zbase and zmin
-    +2 for fill solid between zbase and zmax grey between zbase and zmin
-    -2 for fill solid between zbase and zmin grey between zbase and zmax
-    SHADING: 2<= abs(fill) <=5   abs(fill)=2 light grey  abs(fill)=5 black
-    tracecolor	pointer to trace color, needed to restore from grey plotting
-     **************************************************************************
-    NOTES:
-     * Williams:
-     *     Please look at original psWiggle.c
-     *     Original psWiggle credits:
-     *        Author:  Dave Hale, Colorado School of Mines, 07/03/89
-     ***************************************************************************/
+     */
     {
         int ic, nc, k1, k2, il;
         float shade;
@@ -280,7 +275,7 @@ public class SVWiggle extends SVActor {
             /* if filling */
             if (ifill != 0) {
                 /* APPLY GREY SHADING if abs(ifill)>=2           */
-                if (Math.abs(ifill) >= 2) {
+                if (abs(ifill) >= 2) {
                     /* clip trace values depending on sign of fill */
                     if (ifill < 0) {
                         nc = yclip(k2 - k1 + 1, 1.0f, (float) k1, k1 + iz, z,
@@ -291,8 +286,8 @@ public class SVWiggle extends SVActor {
                     }
 
                     /* set shading color to grey for opposite of fill */
-                    /* ifill=2 light grey   ifill=5 black       */
-                    shade = 1 - 0.2f * ((float) Math.abs(ifill));
+ /* ifill=2 light grey   ifill=5 black       */
+                    shade = 1 - 0.2f * ((float) abs(ifill));
 
                     if (shade < 0.0f) {
                         shade = 0.0f;
@@ -319,12 +314,9 @@ public class SVWiggle extends SVActor {
                             fillPath.lineTo(zbias + zc[ic] * zscale, xbias + xc[ic] * xscale);
 
                             /* else, if current z is the base z */
-                        } else {
-                            /* if last z was not the base z, end subpath */
-                            if (zl != zbase) {
-                                fillPath.lineTo(zbias + zc[ic] * zscale,
-                                        xbias + xc[ic] * xscale);
-                            }
+                        } else /* if last z was not the base z, end subpath */ if (zl != zbase) {
+                            fillPath.lineTo(zbias + zc[ic] * zscale,
+                                    xbias + xc[ic] * xscale);
                         }
 
                         /* remember last x and z */
@@ -343,9 +335,10 @@ public class SVWiggle extends SVActor {
 
                     /* restore trace color  */
                     //setcolor(tracecolor);
-                }  /*  endif GREY SHADING       */
+                }
+                /*  endif GREY SHADING       */
 
-                /* clip trace values depending on sign of fill */
+ /* clip trace values depending on sign of fill */
                 if (ifill > 0) {
                     nc = yclip(k2 - k1 + 1, 1.0f, (float) k1, k1 + iz, z, zbase,
                             zmax, xc, zc);
@@ -375,12 +368,9 @@ public class SVWiggle extends SVActor {
                         fPath.lineTo(zbias + zc[ic] * zscale, xbias + xc[ic] * xscale);
 
                         /* else, if current z is the base z */
-                    } else {
-                        /* if last z was not the base z, end subpath */
-                        if (zl != zbase) {
-                            fPath.lineTo(zbias + zc[ic] * zscale,
-                                    xbias + xc[ic] * xscale);
-                        }
+                    } else /* if last z was not the base z, end subpath */ if (zl != zbase) {
+                        fPath.lineTo(zbias + zc[ic] * zscale,
+                                xbias + xc[ic] * xscale);
                     }
 
                     /* remember last x and z */
@@ -394,17 +384,16 @@ public class SVWiggle extends SVActor {
                 }
 
                 /* fill the wiggle */
-
                 g.fill(fPath);
 
+            }
+            /* end fill block  */
 
-            }  /* end fill block  */
-
-            /* clip trace values between zmin and zmax */
+ /* clip trace values between zmin and zmax */
             nc = yclip(k2 - k1 + 1, 1.0f, (float) k1, k1 + iz, z, zmin, zmax, xc, zc);
 
             /* stroke trace values, avoiding linetos for nearly constant z */
-            g.setColor(java.awt.Color.black);
+            g.setColor(black);
             path.moveTo(zbias + zc[0] * zscale, xbias + xc[0] * xscale);
             il = 0;
             zl = zc[0];
@@ -433,63 +422,55 @@ public class SVWiggle extends SVActor {
     /* The following code was adapted from SU sources.
      * I the credits.
      */
-    /* Copyright (c) Colorado School of Mines, 2008.*/
-    /* All rights reserved.                       */
-    /*********************** self documentation **********************/
-    /*****************************************************************************
-    YCLIP - Clip a function y(x) defined by linear interpolation of the
-    uniformly sampled values:  y(fx), y(fx+dx), ..., y(fx+(nx-1)*dx).
-    Returns the number of samples in the clipped function.
-    yclip		clip a function y(x) defined by linear interplolation of
-    uniformly sampled values
-     ******************************************************************************
-    Function Prototype:
-    int yclip (int nx, float dx, float fx, float y[], float ymin, float ymax,
-    float xc[], float yc[]);
-     ******************************************************************************
-    Input:
-    nx		number of x (and y) values
-    dx		x sampling interval
-    fx		first x
-    y		array[nx] of uniformly sampled y(x) values
-    ymin		minimum y value; must not be greater than ymax
-    ymax		maximum y value; must not be less than ymin
-    Output:
-    xc		array[?] of x values for clipped y(x)
-    yc		array[?] of y values for clipped y(x)
-    Returned:	number of samples in output arrays xc and yc
-     ******************************************************************************
-    Notes:
-    The output arrays xc and yc should contain space 2*nx values, which
-    is the maximum possible number (nc) of xc and yc returned.
-     ******************************************************************************
-    Author:  Dave Hale, Colorado School of Mines, 07/03/89
-     *****************************************************************************/
-    /**************** end self doc ********************************/
+ /* Copyright (c) Colorado School of Mines, 2008.*/
+ /* All rights reserved.                       */
+    /**
+     * ********************* self documentation *********************
+     */
+    /**
+     * ***************************************************************************
+     * YCLIP - Clip a function y(x) defined by linear interpolation of the
+     * uniformly sampled values: y(fx), y(fx+dx), ..., y(fx+(nx-1)*dx). Returns
+     * the number of samples in the clipped function. yclip	clip a function y(x)
+     * defined by linear interplolation of uniformly sampled values
+     * *****************************************************************************
+     * Function Prototype: int yclip (int nx, float dx, float fx, float y[],
+     * float ymin, float ymax, float xc[], float yc[]);
+     * *****************************************************************************
+     * Input: nx	number of x (and y) values dx	x sampling interval fx	first x y
+     * array[nx] of uniformly sampled y(x) values ymin	minimum y value; must not
+     * be greater than ymax ymax	maximum y value; must not be less than ymin
+     * Output: xc	array[?] of x values for clipped y(x) yc	array[?] of y values
+     * for clipped y(x) Returned:	number of samples in output arrays xc and yc
+     * *****************************************************************************
+     * Notes: The output arrays xc and yc should contain space 2*nx values,
+     * which is the maximum possible number (nc) of xc and yc returned.
+     * *****************************************************************************
+     * Author: Dave Hale, Colorado School of Mines, 07/03/89
+     ****************************************************************************
+     */
+    /**
+     * ************** end self doc *******************************
+     */
     private int yclip(int nx, float dx, float fx, int ybase, float y[], float ymin, float ymax,
-            float xc[], float yc[]) /*****************************************************************************
-    Clip a function y(x) defined by linear interpolation of the
-    uniformly sampled values:  y(fx), y(fx+dx), ..., y(fx+(nx-1)*dx).
-    Returns the number of samples in the clipped function.
-     ******************************************************************************
-    Input:
-    nx		number of x (and y) values
-    dx		x sampling interval
-    fx		first x
-    y		array[nx] of uniformly sampled y(x) values
-    ymin		minimum y value; must not be greater than ymax
-    ymax		maximum y value; must not be less than ymin
-    Output:
-    xc		array[?] of x values for clipped y(x)
-    yc		array[?] of y values for clipped y(x)
-    Returned:	number of samples in output arrays xc and yc
-     ******************************************************************************
-    Notes:
-    The output arrays xc and yc should contain space 2*nx values, which
-    is the maximum possible number (nc) of xc and yc returned.
-     ******************************************************************************
-    Author:  Dave Hale, Colorado School of Mines, 07/03/89
-     *****************************************************************************/
+            float xc[], float yc[]) /**
+     * ***************************************************************************
+     * Clip a function y(x) defined by linear interpolation of the uniformly
+     * sampled values: y(fx), y(fx+dx), ..., y(fx+(nx-1)*dx). Returns the number
+     * of samples in the clipped function.
+     * *****************************************************************************
+     * Input: nx	number of x (and y) values dx	x sampling interval fx	first x y
+     * array[nx] of uniformly sampled y(x) values ymin	minimum y value; must not
+     * be greater than ymax ymax	maximum y value; must not be less than ymin
+     * Output: xc	array[?] of x values for clipped y(x) yc	array[?] of y values
+     * for clipped y(x) Returned:	number of samples in output arrays xc and yc
+     * *****************************************************************************
+     * Notes: The output arrays xc and yc should contain space 2*nx values,
+     * which is the maximum possible number (nc) of xc and yc returned.
+     * *****************************************************************************
+     * Author: Dave Hale, Colorado School of Mines, 07/03/89
+     ****************************************************************************
+     */
     /*
      * Williams: The ybase was added to use with y[].
      */ {
@@ -535,17 +516,15 @@ public class SVWiggle extends SVActor {
                         yc[nc++] = ymin;
                     }
                 }
+            } else if (yix < ymin) {
+                xc[nc] = xix - dx * (yix - ymin) / (yix - yixm1);
+                yc[nc++] = ymin;
+            } else if (yix > ymax) {
+                xc[nc] = xix - dx * (yix - ymax) / (yix - yixm1);
+                yc[nc++] = ymax;
             } else {
-                if (yix < ymin) {
-                    xc[nc] = xix - dx * (yix - ymin) / (yix - yixm1);
-                    yc[nc++] = ymin;
-                } else if (yix > ymax) {
-                    xc[nc] = xix - dx * (yix - ymax) / (yix - yixm1);
-                    yc[nc++] = ymax;
-                } else {
-                    xc[nc] = xix;
-                    yc[nc++] = yix;
-                }
+                xc[nc] = xix;
+                yc[nc++] = yix;
             }
         }
         if (yix < ymin) {
@@ -605,7 +584,7 @@ public class SVWiggle extends SVActor {
     boolean m_outDated = true;
     boolean m_computeSamplingValues;
     //
-       /* small number used to eliminate useless linetos */
+    /* small number used to eliminate useless linetos */
     private final float ZEPS = 0.001f;
 
     /* length of segment to keep current path length under limit */

@@ -10,6 +10,10 @@
  */
 package gfx;
 
+import static java.awt.Color.black;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author Williams Lima
@@ -17,7 +21,7 @@ package gfx;
 public class SVXYPlot {
 
     public SVXYPlot() {
-        pointsList = new java.util.Vector<SVPoint2D>();
+        pointsList = new ArrayList<>();
     }
 
     public int getNumberOfPoint() {
@@ -111,11 +115,11 @@ public class SVXYPlot {
         }
     }
     // Variables declaration
-    java.util.Vector<SVPoint2D> pointsList;
+    List<SVPoint2D> pointsList;
     private boolean showPoints = true;
     private int lineStyle = SOLID;
     private int drawSize = 1;
-    private java.awt.Color drawColor = java.awt.Color.black;
+    private java.awt.Color drawColor = black;
     boolean m_isVisible = true;
     // Constants
     public static final int INVISIBLE = 1;

@@ -1,4 +1,5 @@
 package usrdata;
+
 /*
  * SUSection.java 
  *
@@ -10,29 +11,35 @@ package usrdata;
  * Department of Geophysics
  *  
  */
-
-import java.io.DataInputStream;
+import java.awt.HeadlessException;
 import java.util.*;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
-import javax.swing.JOptionPane;
+import static java.lang.Math.abs;
+import static java.lang.System.currentTimeMillis;
+import static java.lang.System.out;
+import static java.util.Collections.unmodifiableList;
+import static javax.swing.JOptionPane.ERROR_MESSAGE;
+import static javax.swing.JOptionPane.WARNING_MESSAGE;
+import static javax.swing.JOptionPane.showMessageDialog;
 
 /**
- * The SUSection class represents a colection of data
- * in the SU format.
- * 
+ * The SUSection class represents a colection of data in the SU format.
+ *
  * @author Williams Lima
  */
 public class SUSection {
 
-    /** Creates a new instance of SUSection */
+    /**
+     * Creates a new instance of SUSection
+     */
     public SUSection() {
         preStakcData = false;
         amplitude = 1;
         eof = false;
         m_xdr = true;
-    
     }
 
     public void addTrace(SUTrace pTrace) {
@@ -53,12 +60,11 @@ public class SUSection {
                 }
             }
         }
-
         return ret;
     }
 
-    public java.util.Vector<SUTrace> getTraces() {
-        return m_traces;
+    public List<SUTrace> getTraces() {
+        return unmodifiableList(m_traces);
     }
 
     public int[] getListOfCDPs() {
@@ -106,15 +112,14 @@ public class SUSection {
                 d1 = hd1;
             } else if (hdt != 0f) {
                 d1 = hdt / 1000000.0f;
+            } else if (m_seismic) {
+                d1 = 0.004f;
             } else {
-                if (m_seismic) {
-                    d1 = 0.004f;
-                } else { /* non-seismic data */
-                    d1 = 1.0f;
-                }
+                /* non-seismic data */
+                d1 = 1.0f;
             }
 
-            if (Math.abs(d1) <= 0.1E-20) {
+            if (abs(d1) <= 0.1E-20) {
                 d1 = 1.0f;
             }
 
@@ -149,7 +154,6 @@ public class SUSection {
 
             return f2;
         }
-
         return 0;
     }
 
@@ -170,11 +174,11 @@ public class SUSection {
     }
 
     public void readFromFile(FileInputStream pInputFile, int pNumTraces) {
-        SUTrace tr = null;
+        SUTrace tr;
         if (!isPreStakcData()) {
             for (int i = 0; i < pNumTraces; i++) {
                 tr = new SUTrace();
-                tr.readFromFile(pInputFile, false,m_xdr);
+                tr.readFromFile(pInputFile, false, m_xdr);
                 m_traces.add(tr);
             }
         } else {
@@ -182,28 +186,21 @@ public class SUSection {
     }
 
     public boolean isEmpty() {
-        if (m_traces.size() > 0) {
-            return false;
-        }
-
-        return true;
+        return m_traces.size() <= 0;
     }
-    
-    public void setFormat(String format){
-        m_xdr = true;
-        
-        if(format.equalsIgnoreCase("no-xdr")){
-            m_xdr = false;
-        }
+
+    public void setFormat(String format) {
+        m_xdr = format.equalsIgnoreCase("no-xdr");
     }
 
     public void readFromInputStream(InputStream input) {
 
-        if(isEof())
+        if (isEof()) {
             return;
+        }
 
         SUTrace trace = new SUTrace();
-        trace.readFromFile(input, false,m_xdr);
+        trace.readFromFile(input, false, m_xdr);
         m_traces.clear();
         boolean flag = false;
         try {
@@ -211,7 +208,7 @@ public class SUSection {
                 m_traces.add(trace);
                 while (input.available() > 0) {
                     trace = new SUTrace();
-                    trace.readFromFile(input, false,m_xdr);
+                    trace.readFromFile(input, false, m_xdr);
                     m_traces.add(trace);
                 }
             } else {
@@ -223,7 +220,7 @@ public class SUSection {
                 ekey = skey = m_traces.get(0).getHeader().getValue(pkey);
                 while (input.available() > 0 && !flag) {
                     trace = new SUTrace();
-                    trace.readFromFile(input, false,m_xdr);
+                    trace.readFromFile(input, false, m_xdr);
                     ekey = trace.getHeader().getValue(pkey);
                     if (skey == ekey) {
                         m_traces.add(trace);
@@ -232,16 +229,14 @@ public class SUSection {
                         flag = true;
                     }
                 }
-                if(!flag){
-                    JOptionPane.showMessageDialog(null, "End of file!");
+                if (!flag) {
+                    showMessageDialog(null, "End of file!");
                     eof = true;
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            javax.swing.JOptionPane.showMessageDialog(null,
-                    "Cant read file!", "Alert",
-                    javax.swing.JOptionPane.ERROR_MESSAGE);
+        } catch (IOException | HeadlessException e) {
+            showMessageDialog(null,
+                    "Cant read file!", "Alert", ERROR_MESSAGE);
         }
 
     }
@@ -249,42 +244,41 @@ public class SUSection {
     public void readFromFile(String pFilePath) {
         try {
 
-            System.out.println("Start....");
-            long d = System.currentTimeMillis();
+            out.println("Start....");
+            long d = currentTimeMillis();
             java.io.File inpF = new java.io.File(pFilePath);
             if (inpF.canRead()) {
                 java.io.FileInputStream ifStream = new java.io.FileInputStream(inpF);
-                SUTrace tr = null;
+                SUTrace tr;
                 tr = new SUTrace();
-                tr.readFromFile(ifStream, false,m_xdr);
+                tr.readFromFile(ifStream, false, m_xdr);
                 m_traces.add(tr);
                 long ntraces = inpF.length() / (240 + tr.getHeader().ns * 4);
                 for (int i = 0; i < ntraces - 1; i++) {
                     tr = new SUTrace();
-                    tr.readFromFile(ifStream, false,m_xdr);
+                    tr.readFromFile(ifStream, false, m_xdr);
                     m_traces.add(tr);
                 }
             } else {
-                javax.swing.JOptionPane.showMessageDialog(null,
-                        "Cant read file: " + pFilePath, "Alert",
-                        javax.swing.JOptionPane.WARNING_MESSAGE);
+                showMessageDialog(null,
+                        "Cant read file: " + pFilePath, "Alert", WARNING_MESSAGE);
             }
-            long d2 = System.currentTimeMillis();
+            long d2 = currentTimeMillis();
             Date data = new Date(d2 - d);
-            System.out.println("Stop...");
-            System.out.println(data.getSeconds());
+            out.println("Stop...");
+            out.println(data.getSeconds());
         } catch (java.io.FileNotFoundException exp) {
         }
     }
 
     public void writeToFile(FileOutputStream pOutputFile) {
         for (int i = 0; i < m_traces.size(); i++) {
-            m_traces.get(i).writeToFile(pOutputFile,m_xdr);
+            m_traces.get(i).writeToFile(pOutputFile, m_xdr);
         }
     }
 
-    public void setTraces(Vector<SUTrace> vector) {
-        m_traces = (Vector<SUTrace>) vector.clone();
+    public void setTraces(List<SUTrace> vector) {
+        m_traces = unmodifiableList(vector);
     }
 
     /**
@@ -315,7 +309,7 @@ public class SUSection {
         this.pkey = pkey;
     }
     // Variables declaration
-    private Vector<SUTrace> m_traces = new Vector<SUTrace>();
+    private List<SUTrace> m_traces = new ArrayList<>();
     private boolean m_seismic = true;
     private boolean eof;
     private boolean preStakcData;
@@ -323,17 +317,29 @@ public class SUSection {
     private SUTrace oldTrace;
     private float amplitude;
     int m_n1;
-    /**< Number of samples in 1st dimension. */
+    /**
+     * < Number of samples in 1st dimension.
+     */
     int m_n2;
-    /**< Number of samples in 2nd dimension. */
+    /**
+     * < Number of samples in 2nd dimension.
+     */
     float m_f1;
-    /**< First value in 1st dimension. */
+    /**
+     * < First value in 1st dimension.
+     */
     float m_f2;
-    /**< First value in 2nd dimension. */
+    /**
+     * < First value in 2nd dimension.
+     */
     float m_d1;
-    /**< Sampling interval in 1st dimension. */
+    /**
+     * < Sampling interval in 1st dimension.
+     */
     float m_d2;
-    /** xdr format */
+    /**
+     * xdr format
+     */
     boolean m_xdr;
 
     /**
@@ -342,5 +348,7 @@ public class SUSection {
     public boolean isEof() {
         return eof;
     }
-    /**< Sampling interval in 2nd dimension. */
+    /**
+     * < Sampling interval in 2nd dimension.
+     */
 }

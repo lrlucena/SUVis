@@ -8,6 +8,14 @@
  */
 package gfx;
 
+import static java.awt.Color.black;
+import static java.awt.Font.PLAIN;
+import static java.lang.Math.PI;
+import static java.lang.Math.log10;
+import static java.lang.Math.pow;
+import static java.lang.Math.sqrt;
+import static java.lang.String.format;
+
 /**
  * The SVAxis class represents an axis.
  * Its an adaptation of some functions related to axes drawing
@@ -21,8 +29,8 @@ public class SVAxis {
         m_orientation = orientation;
         m_axisSide = side;
         m_title = title;
-        m_titleFont = new java.awt.Font("Courier", java.awt.Font.PLAIN, 12);
-        m_labelFont = new java.awt.Font("Courier", java.awt.Font.PLAIN, 12);
+        m_titleFont = new java.awt.Font("Courier", PLAIN, 12);
+        m_labelFont = new java.awt.Font("Courier", PLAIN, 12);
     }
 
     public void draw(java.awt.Graphics2D g, int x, int y, int width, int height) {
@@ -30,9 +38,8 @@ public class SVAxis {
             case HORIZONTAL:
                 drawHorizontalAxis(g, x, y, width, height);
                 break;
-            case VERTICAL:
+            default: //VERTICAL:
                 drawVerticalAxis(g, x, y, width, height);
-                break;
         }
     }
 
@@ -180,9 +187,9 @@ public class SVAxis {
             g2.setColor(m_axisColor);
             g2.drawLine(xa, ya, xa, ya + ticb);
             if (anum > -azero && anum < azero) {
-                str = String.format("%1.0f", 0.0);
+                str = format("%1.0f", 0.0);
             } else {
-                str = String.format("%1.0f", anum);
+                str = format("%1.0f", anum);
             }
             lstr = str.length();
             tw = lstr * getLabelsCW(g);
@@ -272,9 +279,9 @@ public class SVAxis {
             g2.setColor(m_axisColor);
             g2.drawLine(xa, ya, xa + ticb, ya);
             if (anum > -azero && anum < azero) {
-                str = String.format("%1.2f", 0.0);
+                str = format("%1.2f", 0.0);
             } else {
-                str = String.format("%1.2f", anum);
+                str = format("%1.2f", anum);
             }
             lstr = str.length();
             tw = lstr * getLabelsCW(g);
@@ -303,7 +310,7 @@ public class SVAxis {
         java.awt.geom.AffineTransform t = g2.getTransform();
 
         g2.translate(pX - getLabelsCW(g) * 5 + numb, pY + pHeight / 2 + tw / 2);
-        g2.rotate(-Math.PI / 2.0);
+        g2.rotate(-PI / 2.0);
         g2.drawString(m_title, 0, 0);
 
         g2.setTransform(t);
@@ -369,17 +376,17 @@ public class SVAxis {
 
         /* determine output parameters, adjusted for roundoff */
         a = (xmax - xmin) / (double) (n - 1);
-        iloga = (int) Math.log10((double) a);
+        iloga = (int) log10((double) a);
         if (a < 1.0) {
             iloga = iloga - 1;
         }
 
-        b = a / Math.pow(10.0, (double) iloga);
-        for (i = 0; i < 3 && b >= Math.sqrt(rdint[i] * rdint[i + 1]); i++) {
+        b = a / pow(10.0, (double) iloga);
+        for (i = 0; i < 3 && b >= sqrt(rdint[i] * rdint[i + 1]); i++) {
             ;
         }
 
-        d = rdint[i] * Math.pow(10.0, (double) iloga);
+        d = rdint[i] * pow(10.0, (double) iloga);
         f = ((int) (xmin / d)) * d - d;
         eps = 0.0001 * (xmax - xmin);
 
@@ -415,9 +422,9 @@ public class SVAxis {
     double m_dtic;
     double m_ntic;
     double m_fnum;
-    java.awt.Color m_axisColor = java.awt.Color.black;
-    java.awt.Color m_labelColor = java.awt.Color.black;
-    java.awt.Color m_titleColor = java.awt.Color.black;
+    java.awt.Color m_axisColor = black;
+    java.awt.Color m_labelColor = black;
+    java.awt.Color m_titleColor = black;
     private java.awt.Font m_titleFont;
     private java.awt.Font m_labelFont;
     String m_title = "";

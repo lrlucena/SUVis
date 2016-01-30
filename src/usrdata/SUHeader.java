@@ -1,4 +1,5 @@
 package usrdata;
+
 /*
  * SUHeader.java
  *
@@ -11,15 +12,33 @@ package usrdata;
  */
 
 import java.io.*;
+import static usrdata.NumericIO.readFloat;
+import static usrdata.NumericIO.readInt;
+import static usrdata.NumericIO.readShort;
+import static usrdata.NumericIO.readSwapFloat;
+import static usrdata.NumericIO.readSwapInt;
+import static usrdata.NumericIO.readSwapShort;
+import static usrdata.NumericIO.readSwapUShort;
+import static usrdata.NumericIO.readUShort;
+import static usrdata.NumericIO.writeFloat;
+import static usrdata.NumericIO.writeInt;
+import static usrdata.NumericIO.writeShort;
+import static usrdata.NumericIO.writeSwapFloat;
+import static usrdata.NumericIO.writeSwapInt;
+import static usrdata.NumericIO.writeSwapShort;
+import static usrdata.NumericIO.writeSwapUShort;
+import static usrdata.NumericIO.writeUShort;
 
 /**
  * The SUHeader class represents a SU(segy) trace header.
- * 
+ *
  * @author Williams Lima
  */
 public class SUHeader {
 
-    /** Creates a new instance of SUHeader */
+    /**
+     * Creates a new instance of SUHeader
+     */
     public SUHeader() {
         scalco = 0;
         tracl = 0;
@@ -105,355 +124,357 @@ public class SUHeader {
     }
 
     public void readFromFile(InputStream pIn) {
-        tracl = NumericIO.readInt(pIn);
-        tracr = NumericIO.readInt(pIn);
-        fldr = NumericIO.readInt(pIn);
-        tracf = NumericIO.readInt(pIn);
-        ep = NumericIO.readInt(pIn);
-        cdp = NumericIO.readInt(pIn);
-        cdpt = NumericIO.readInt(pIn);
-        trid = NumericIO.readShort(pIn);
-        nvs = NumericIO.readShort(pIn);
-        nhs = NumericIO.readShort(pIn);
-        duse = NumericIO.readShort(pIn);
-        offset = NumericIO.readInt(pIn);
-        gelev = NumericIO.readInt(pIn);
-        selev = NumericIO.readInt(pIn);
-        sdepth = NumericIO.readInt(pIn);
-        gdel = NumericIO.readInt(pIn);
-        sdel = NumericIO.readInt(pIn);
-        swdep = NumericIO.readInt(pIn);
-        gwdep = NumericIO.readInt(pIn);
-        scalel = NumericIO.readShort(pIn);
-        scalco = NumericIO.readShort(pIn);
-        sx = NumericIO.readInt(pIn);
-        sy = NumericIO.readInt(pIn);
-        gx = NumericIO.readInt(pIn);
-        gy = NumericIO.readInt(pIn);
-        counit = NumericIO.readShort(pIn);
-        wevel = NumericIO.readShort(pIn);
-        swevel = NumericIO.readShort(pIn);
-        sut = NumericIO.readShort(pIn);
-        gut = NumericIO.readShort(pIn);
-        sstat = NumericIO.readShort(pIn);
-        gstat = NumericIO.readShort(pIn);
-        tstat = NumericIO.readShort(pIn);
-        laga = NumericIO.readShort(pIn);
-        lagb = NumericIO.readShort(pIn);
-        delrt = NumericIO.readShort(pIn);
-        muts = NumericIO.readShort(pIn);
-        mute = NumericIO.readShort(pIn);
-        ns = NumericIO.readUShort(pIn);
-        dt = NumericIO.readUShort(pIn);
-        gain = NumericIO.readShort(pIn);
-        igc = NumericIO.readShort(pIn);
-        igi = NumericIO.readShort(pIn);
-        corr = NumericIO.readShort(pIn);
-        sfs = NumericIO.readShort(pIn);
-        sfe = NumericIO.readShort(pIn);
-        slen = NumericIO.readShort(pIn);
-        styp = NumericIO.readShort(pIn);
-        stas = NumericIO.readShort(pIn);
-        stae = NumericIO.readShort(pIn);
-        tatyp = NumericIO.readShort(pIn);
-        afilf = NumericIO.readShort(pIn);
-        afils = NumericIO.readShort(pIn);
-        nofilf = NumericIO.readShort(pIn);
-        nofils = NumericIO.readShort(pIn);
-        lcf = NumericIO.readShort(pIn);
-        hcf = NumericIO.readShort(pIn);
-        lcs = NumericIO.readShort(pIn);
-        hcs = NumericIO.readShort(pIn);
-        year = NumericIO.readShort(pIn);
-        day = NumericIO.readShort(pIn);
-        hour = NumericIO.readShort(pIn);
-        minute = NumericIO.readShort(pIn);
-        sec = NumericIO.readShort(pIn);
-        timbas = NumericIO.readShort(pIn);
-        trwf = NumericIO.readShort(pIn);
-        grnors = NumericIO.readShort(pIn);
-        grnofr = NumericIO.readShort(pIn);
-        grnlof = NumericIO.readShort(pIn);
-        gaps = NumericIO.readShort(pIn);
-        otrav = NumericIO.readShort(pIn); //
+        tracl = readInt(pIn);
+        tracr = readInt(pIn);
+        fldr = readInt(pIn);
+        tracf = readInt(pIn);
+        ep = readInt(pIn);
+        cdp = readInt(pIn);
+        cdpt = readInt(pIn);
+        trid = readShort(pIn);
+        nvs = readShort(pIn);
+        nhs = readShort(pIn);
+        duse = readShort(pIn);
+        offset = readInt(pIn);
+        gelev = readInt(pIn);
+        selev = readInt(pIn);
+        sdepth = readInt(pIn);
+        gdel = readInt(pIn);
+        sdel = readInt(pIn);
+        swdep = readInt(pIn);
+        gwdep = readInt(pIn);
+        scalel = readShort(pIn);
+        scalco = readShort(pIn);
+        sx = readInt(pIn);
+        sy = readInt(pIn);
+        gx = readInt(pIn);
+        gy = readInt(pIn);
+        counit = readShort(pIn);
+        wevel = readShort(pIn);
+        swevel = readShort(pIn);
+        sut = readShort(pIn);
+        gut = readShort(pIn);
+        sstat = readShort(pIn);
+        gstat = readShort(pIn);
+        tstat = readShort(pIn);
+        laga = readShort(pIn);
+        lagb = readShort(pIn);
+        delrt = readShort(pIn);
+        muts = readShort(pIn);
+        mute = readShort(pIn);
+        ns = readUShort(pIn);
+        dt = readUShort(pIn);
+        gain = readShort(pIn);
+        igc = readShort(pIn);
+        igi = readShort(pIn);
+        corr = readShort(pIn);
+        sfs = readShort(pIn);
+        sfe = readShort(pIn);
+        slen = readShort(pIn);
+        styp = readShort(pIn);
+        stas = readShort(pIn);
+        stae = readShort(pIn);
+        tatyp = readShort(pIn);
+        afilf = readShort(pIn);
+        afils = readShort(pIn);
+        nofilf = readShort(pIn);
+        nofils = readShort(pIn);
+        lcf = readShort(pIn);
+        hcf = readShort(pIn);
+        lcs = readShort(pIn);
+        hcs = readShort(pIn);
+        year = readShort(pIn);
+        day = readShort(pIn);
+        hour = readShort(pIn);
+        minute = readShort(pIn);
+        sec = readShort(pIn);
+        timbas = readShort(pIn);
+        trwf = readShort(pIn);
+        grnors = readShort(pIn);
+        grnofr = readShort(pIn);
+        grnlof = readShort(pIn);
+        gaps = readShort(pIn);
+        otrav = readShort(pIn); //
         /* cwp local assignments */
-        d1 = NumericIO.readFloat(pIn);
-        f1 = NumericIO.readFloat(pIn);
-        d2 = NumericIO.readFloat(pIn);
-        f2 = NumericIO.readFloat(pIn);
-        ungpow = NumericIO.readFloat(pIn);
-        unscale = NumericIO.readFloat(pIn);
-        ntr = NumericIO.readInt(pIn);
-        mark = NumericIO.readShort(pIn);
-        shortpad = NumericIO.readShort(pIn);
+        d1 = readFloat(pIn);
+        f1 = readFloat(pIn);
+        d2 = readFloat(pIn);
+        f2 = readFloat(pIn);
+        ungpow = readFloat(pIn);
+        unscale = readFloat(pIn);
+        ntr = readInt(pIn);
+        mark = readShort(pIn);
+        shortpad = readShort(pIn);
 
         for (int i = 0; i < 14; i++) {
-            unass[i] = NumericIO.readShort(pIn);
+            unass[i] = readShort(pIn);
         }
 
     }
+
     public void readFromFileXDR(InputStream pIn) {
-        tracl = NumericIO.readSwapInt(pIn);   
-        tracr = NumericIO.readSwapInt(pIn);
-        fldr = NumericIO.readSwapInt(pIn);
-        tracf = NumericIO.readSwapInt(pIn);
-        ep = NumericIO.readSwapInt(pIn);
-        cdp = NumericIO.readSwapInt(pIn);
-        cdpt = NumericIO.readSwapInt(pIn);
-        trid = NumericIO.readSwapShort(pIn);
-        nvs = NumericIO.readSwapShort(pIn);
-        nhs = NumericIO.readSwapShort(pIn);
-        duse = NumericIO.readSwapShort(pIn);
-        offset = NumericIO.readSwapInt(pIn);
-        gelev = NumericIO.readSwapInt(pIn);
-        selev = NumericIO.readSwapInt(pIn);
-        sdepth = NumericIO.readSwapInt(pIn);
-        gdel = NumericIO.readSwapInt(pIn);
-        sdel = NumericIO.readSwapInt(pIn);
-        swdep = NumericIO.readSwapInt(pIn);
-        gwdep = NumericIO.readSwapInt(pIn);
-        scalel = NumericIO.readSwapShort(pIn);
-        scalco = NumericIO.readSwapShort(pIn);
-        sx = NumericIO.readSwapInt(pIn);
-        sy = NumericIO.readSwapInt(pIn);
-        gx = NumericIO.readSwapInt(pIn);
-        gy = NumericIO.readSwapInt(pIn);
-        counit = NumericIO.readSwapShort(pIn);
-        wevel = NumericIO.readSwapShort(pIn);
-        swevel = NumericIO.readSwapShort(pIn);
-        sut = NumericIO.readSwapShort(pIn);
-        gut = NumericIO.readSwapShort(pIn);
-        sstat = NumericIO.readSwapShort(pIn);
-        gstat = NumericIO.readSwapShort(pIn);
-        tstat = NumericIO.readSwapShort(pIn);
-        laga = NumericIO.readSwapShort(pIn);
-        lagb = NumericIO.readSwapShort(pIn);
-        delrt = NumericIO.readSwapShort(pIn);
-        muts = NumericIO.readSwapShort(pIn);
-        mute = NumericIO.readSwapShort(pIn);
-        ns = NumericIO.readSwapUShort(pIn);
-        dt = NumericIO.readSwapUShort(pIn);
-        gain = NumericIO.readSwapShort(pIn);
-        igc = NumericIO.readSwapShort(pIn);
-        igi = NumericIO.readSwapShort(pIn);
-        corr = NumericIO.readSwapShort(pIn);
-        sfs = NumericIO.readSwapShort(pIn);
-        sfe = NumericIO.readSwapShort(pIn);
-        slen = NumericIO.readSwapShort(pIn);
-        styp = NumericIO.readSwapShort(pIn);
-        stas = NumericIO.readSwapShort(pIn);
-        stae = NumericIO.readSwapShort(pIn);
-        tatyp = NumericIO.readSwapShort(pIn);
-        afilf = NumericIO.readSwapShort(pIn);
-        afils = NumericIO.readSwapShort(pIn);
-        nofilf = NumericIO.readSwapShort(pIn);
-        nofils = NumericIO.readSwapShort(pIn);
-        lcf = NumericIO.readSwapShort(pIn);
-        hcf = NumericIO.readSwapShort(pIn);
-        lcs = NumericIO.readSwapShort(pIn);
-        hcs = NumericIO.readSwapShort(pIn);
-        year = NumericIO.readSwapShort(pIn);
-        day = NumericIO.readSwapShort(pIn);
-        hour = NumericIO.readSwapShort(pIn);
-        minute = NumericIO.readSwapShort(pIn);
-        sec = NumericIO.readSwapShort(pIn);
-        timbas = NumericIO.readSwapShort(pIn);
-        trwf = NumericIO.readSwapShort(pIn);
-        grnors = NumericIO.readSwapShort(pIn);
-        grnofr = NumericIO.readSwapShort(pIn);
-        grnlof = NumericIO.readSwapShort(pIn);
-        gaps = NumericIO.readSwapShort(pIn);
-        otrav = NumericIO.readSwapShort(pIn); //
+        tracl = readSwapInt(pIn);
+        tracr = readSwapInt(pIn);
+        fldr = readSwapInt(pIn);
+        tracf = readSwapInt(pIn);
+        ep = readSwapInt(pIn);
+        cdp = readSwapInt(pIn);
+        cdpt = readSwapInt(pIn);
+        trid = readSwapShort(pIn);
+        nvs = readSwapShort(pIn);
+        nhs = readSwapShort(pIn);
+        duse = readSwapShort(pIn);
+        offset = readSwapInt(pIn);
+        gelev = readSwapInt(pIn);
+        selev = readSwapInt(pIn);
+        sdepth = readSwapInt(pIn);
+        gdel = readSwapInt(pIn);
+        sdel = readSwapInt(pIn);
+        swdep = readSwapInt(pIn);
+        gwdep = readSwapInt(pIn);
+        scalel = readSwapShort(pIn);
+        scalco = readSwapShort(pIn);
+        sx = readSwapInt(pIn);
+        sy = readSwapInt(pIn);
+        gx = readSwapInt(pIn);
+        gy = readSwapInt(pIn);
+        counit = readSwapShort(pIn);
+        wevel = readSwapShort(pIn);
+        swevel = readSwapShort(pIn);
+        sut = readSwapShort(pIn);
+        gut = readSwapShort(pIn);
+        sstat = readSwapShort(pIn);
+        gstat = readSwapShort(pIn);
+        tstat = readSwapShort(pIn);
+        laga = readSwapShort(pIn);
+        lagb = readSwapShort(pIn);
+        delrt = readSwapShort(pIn);
+        muts = readSwapShort(pIn);
+        mute = readSwapShort(pIn);
+        ns = readSwapUShort(pIn);
+        dt = readSwapUShort(pIn);
+        gain = readSwapShort(pIn);
+        igc = readSwapShort(pIn);
+        igi = readSwapShort(pIn);
+        corr = readSwapShort(pIn);
+        sfs = readSwapShort(pIn);
+        sfe = readSwapShort(pIn);
+        slen = readSwapShort(pIn);
+        styp = readSwapShort(pIn);
+        stas = readSwapShort(pIn);
+        stae = readSwapShort(pIn);
+        tatyp = readSwapShort(pIn);
+        afilf = readSwapShort(pIn);
+        afils = readSwapShort(pIn);
+        nofilf = readSwapShort(pIn);
+        nofils = readSwapShort(pIn);
+        lcf = readSwapShort(pIn);
+        hcf = readSwapShort(pIn);
+        lcs = readSwapShort(pIn);
+        hcs = readSwapShort(pIn);
+        year = readSwapShort(pIn);
+        day = readSwapShort(pIn);
+        hour = readSwapShort(pIn);
+        minute = readSwapShort(pIn);
+        sec = readSwapShort(pIn);
+        timbas = readSwapShort(pIn);
+        trwf = readSwapShort(pIn);
+        grnors = readSwapShort(pIn);
+        grnofr = readSwapShort(pIn);
+        grnlof = readSwapShort(pIn);
+        gaps = readSwapShort(pIn);
+        otrav = readSwapShort(pIn); //
         /* cwp local assignments */
-        d1 = NumericIO.readSwapFloat(pIn);
-        f1 = NumericIO.readSwapFloat(pIn);
-        d2 = NumericIO.readSwapFloat(pIn);
-        f2 = NumericIO.readSwapFloat(pIn);
-        ungpow = NumericIO.readSwapFloat(pIn);
-        unscale = NumericIO.readSwapFloat(pIn);
-        ntr = NumericIO.readSwapInt(pIn);
-        mark = NumericIO.readSwapShort(pIn);
-        shortpad = NumericIO.readSwapShort(pIn);
+        d1 = readSwapFloat(pIn);
+        f1 = readSwapFloat(pIn);
+        d2 = readSwapFloat(pIn);
+        f2 = readSwapFloat(pIn);
+        ungpow = readSwapFloat(pIn);
+        unscale = readSwapFloat(pIn);
+        ntr = readSwapInt(pIn);
+        mark = readSwapShort(pIn);
+        shortpad = readSwapShort(pIn);
 
         for (int i = 0; i < 14; i++) {
-            unass[i] = NumericIO.readSwapShort(pIn);
+            unass[i] = readSwapShort(pIn);
         }
 
     }
 
     public void writeToFile(FileOutputStream pOut) {
-        NumericIO.writeInt(pOut, tracl);
-        NumericIO.writeInt(pOut, tracr);
-        NumericIO.writeInt(pOut, fldr);
-        NumericIO.writeInt(pOut, tracf);
-        NumericIO.writeInt(pOut, ep);
-        NumericIO.writeInt(pOut, cdp);
-        NumericIO.writeInt(pOut, cdpt);
-        NumericIO.writeShort(pOut, trid);
-        NumericIO.writeShort(pOut, nvs);
-        NumericIO.writeShort(pOut, nhs);
-        NumericIO.writeShort(pOut, duse);
-        NumericIO.writeInt(pOut, offset);
-        NumericIO.writeInt(pOut, gelev);
-        NumericIO.writeInt(pOut, selev);
-        NumericIO.writeInt(pOut, sdepth);
-        NumericIO.writeInt(pOut, gdel);
-        NumericIO.writeInt(pOut, sdel);
-        NumericIO.writeInt(pOut, swdep);
-        NumericIO.writeInt(pOut, gwdep);
-        NumericIO.writeShort(pOut, scalel);
-        NumericIO.writeShort(pOut, scalco);
-        NumericIO.writeInt(pOut, sx);
-        NumericIO.writeInt(pOut, sy);
-        NumericIO.writeInt(pOut, gx);
-        NumericIO.writeInt(pOut, gy);
-        NumericIO.writeShort(pOut, counit);
-        NumericIO.writeShort(pOut, wevel);
-        NumericIO.writeShort(pOut, swevel);
-        NumericIO.writeShort(pOut, sut);
-        NumericIO.writeShort(pOut, gut);
-        NumericIO.writeShort(pOut, sstat);
-        NumericIO.writeShort(pOut, gstat);
-        NumericIO.writeShort(pOut, tstat);
-        NumericIO.writeShort(pOut, laga);
-        NumericIO.writeShort(pOut, lagb);
-        NumericIO.writeShort(pOut, delrt);
-        NumericIO.writeShort(pOut, muts);
-        NumericIO.writeShort(pOut, mute);
-        NumericIO.writeUShort(pOut, ns); // unsigned
-        NumericIO.writeUShort(pOut, dt); // unsigned
-        NumericIO.writeShort(pOut, gain);
-        NumericIO.writeShort(pOut, igc);
-        NumericIO.writeShort(pOut, igi);
-        NumericIO.writeShort(pOut, corr);
-        NumericIO.writeShort(pOut, sfs);
-        NumericIO.writeShort(pOut, sfe);
-        NumericIO.writeShort(pOut, slen);
-        NumericIO.writeShort(pOut, styp);
-        NumericIO.writeShort(pOut, stas);
-        NumericIO.writeShort(pOut, stae);
-        NumericIO.writeShort(pOut, tatyp);
-        NumericIO.writeShort(pOut, afilf);
-        NumericIO.writeShort(pOut, afils);
-        NumericIO.writeShort(pOut, nofilf);
-        NumericIO.writeShort(pOut, nofils);
-        NumericIO.writeShort(pOut, lcf);
-        NumericIO.writeShort(pOut, hcf);
-        NumericIO.writeShort(pOut, lcs);
-        NumericIO.writeShort(pOut, hcs);
-        NumericIO.writeShort(pOut, year);
-        NumericIO.writeShort(pOut, day);
-        NumericIO.writeShort(pOut, hour);
-        NumericIO.writeShort(pOut, minute);
-        NumericIO.writeShort(pOut, sec);
-        NumericIO.writeShort(pOut, timbas);
-        NumericIO.writeShort(pOut, trwf);
-        NumericIO.writeShort(pOut, grnors);
-        NumericIO.writeShort(pOut, grnofr);
-        NumericIO.writeShort(pOut, grnlof);
-        NumericIO.writeShort(pOut, gaps);
-        NumericIO.writeShort(pOut, otrav);
+        writeInt(pOut, tracl);
+        writeInt(pOut, tracr);
+        writeInt(pOut, fldr);
+        writeInt(pOut, tracf);
+        writeInt(pOut, ep);
+        writeInt(pOut, cdp);
+        writeInt(pOut, cdpt);
+        writeShort(pOut, trid);
+        writeShort(pOut, nvs);
+        writeShort(pOut, nhs);
+        writeShort(pOut, duse);
+        writeInt(pOut, offset);
+        writeInt(pOut, gelev);
+        writeInt(pOut, selev);
+        writeInt(pOut, sdepth);
+        writeInt(pOut, gdel);
+        writeInt(pOut, sdel);
+        writeInt(pOut, swdep);
+        writeInt(pOut, gwdep);
+        writeShort(pOut, scalel);
+        writeShort(pOut, scalco);
+        writeInt(pOut, sx);
+        writeInt(pOut, sy);
+        writeInt(pOut, gx);
+        writeInt(pOut, gy);
+        writeShort(pOut, counit);
+        writeShort(pOut, wevel);
+        writeShort(pOut, swevel);
+        writeShort(pOut, sut);
+        writeShort(pOut, gut);
+        writeShort(pOut, sstat);
+        writeShort(pOut, gstat);
+        writeShort(pOut, tstat);
+        writeShort(pOut, laga);
+        writeShort(pOut, lagb);
+        writeShort(pOut, delrt);
+        writeShort(pOut, muts);
+        writeShort(pOut, mute);
+        writeUShort(pOut, ns); // unsigned
+        writeUShort(pOut, dt); // unsigned
+        writeShort(pOut, gain);
+        writeShort(pOut, igc);
+        writeShort(pOut, igi);
+        writeShort(pOut, corr);
+        writeShort(pOut, sfs);
+        writeShort(pOut, sfe);
+        writeShort(pOut, slen);
+        writeShort(pOut, styp);
+        writeShort(pOut, stas);
+        writeShort(pOut, stae);
+        writeShort(pOut, tatyp);
+        writeShort(pOut, afilf);
+        writeShort(pOut, afils);
+        writeShort(pOut, nofilf);
+        writeShort(pOut, nofils);
+        writeShort(pOut, lcf);
+        writeShort(pOut, hcf);
+        writeShort(pOut, lcs);
+        writeShort(pOut, hcs);
+        writeShort(pOut, year);
+        writeShort(pOut, day);
+        writeShort(pOut, hour);
+        writeShort(pOut, minute);
+        writeShort(pOut, sec);
+        writeShort(pOut, timbas);
+        writeShort(pOut, trwf);
+        writeShort(pOut, grnors);
+        writeShort(pOut, grnofr);
+        writeShort(pOut, grnlof);
+        writeShort(pOut, gaps);
+        writeShort(pOut, otrav);
         /* cwp local assignments */
-        NumericIO.writeFloat(pOut, d1);
-        NumericIO.writeFloat(pOut, f1);
-        NumericIO.writeFloat(pOut, d2);
-        NumericIO.writeFloat(pOut, f2);
-        NumericIO.writeFloat(pOut, ungpow);
-        NumericIO.writeFloat(pOut, unscale);
-        NumericIO.writeInt(pOut, ntr);
-        NumericIO.writeShort(pOut, mark);
-        NumericIO.writeShort(pOut, shortpad);
+        writeFloat(pOut, d1);
+        writeFloat(pOut, f1);
+        writeFloat(pOut, d2);
+        writeFloat(pOut, f2);
+        writeFloat(pOut, ungpow);
+        writeFloat(pOut, unscale);
+        writeInt(pOut, ntr);
+        writeShort(pOut, mark);
+        writeShort(pOut, shortpad);
 
         for (int i = 0; i < 14; i++) {
-            NumericIO.writeShort(pOut, unass[i]);
+            writeShort(pOut, unass[i]);
         }
 
     }
+
     public void writeToFileXDR(FileOutputStream pOut) {
-        NumericIO.writeSwapInt(pOut, tracl);
-        NumericIO.writeSwapInt(pOut, tracr);
-        NumericIO.writeSwapInt(pOut, fldr);
-        NumericIO.writeSwapInt(pOut, tracf);
-        NumericIO.writeSwapInt(pOut, ep);
-        NumericIO.writeSwapInt(pOut, cdp);
-        NumericIO.writeSwapInt(pOut, cdpt);
-        NumericIO.writeSwapShort(pOut, trid);
-        NumericIO.writeSwapShort(pOut, nvs);
-        NumericIO.writeSwapShort(pOut, nhs);
-        NumericIO.writeSwapShort(pOut, duse);
-        NumericIO.writeSwapInt(pOut, offset);
-        NumericIO.writeSwapInt(pOut, gelev);
-        NumericIO.writeSwapInt(pOut, selev);
-        NumericIO.writeSwapInt(pOut, sdepth);
-        NumericIO.writeSwapInt(pOut, gdel);
-        NumericIO.writeSwapInt(pOut, sdel);
-        NumericIO.writeSwapInt(pOut, swdep);
-        NumericIO.writeSwapInt(pOut, gwdep);
-        NumericIO.writeSwapShort(pOut, scalel);
-        NumericIO.writeSwapShort(pOut, scalco);
-        NumericIO.writeSwapInt(pOut, sx);
-        NumericIO.writeSwapInt(pOut, sy);
-        NumericIO.writeSwapInt(pOut, gx);
-        NumericIO.writeSwapInt(pOut, gy);
-        NumericIO.writeSwapShort(pOut, counit);
-        NumericIO.writeSwapShort(pOut, wevel);
-        NumericIO.writeSwapShort(pOut, swevel);
-        NumericIO.writeSwapShort(pOut, sut);
-        NumericIO.writeSwapShort(pOut, gut);
-        NumericIO.writeSwapShort(pOut, sstat);
-        NumericIO.writeSwapShort(pOut, gstat);
-        NumericIO.writeSwapShort(pOut, tstat);
-        NumericIO.writeSwapShort(pOut, laga);
-        NumericIO.writeSwapShort(pOut, lagb);
-        NumericIO.writeSwapShort(pOut, delrt);
-        NumericIO.writeSwapShort(pOut, muts);
-        NumericIO.writeSwapShort(pOut, mute);
-        NumericIO.writeSwapUShort(pOut, ns); // unsigned
-        NumericIO.writeSwapUShort(pOut, dt); // unsigned
-        NumericIO.writeSwapShort(pOut, gain);
-        NumericIO.writeSwapShort(pOut, igc);
-        NumericIO.writeSwapShort(pOut, igi);
-        NumericIO.writeSwapShort(pOut, corr);
-        NumericIO.writeSwapShort(pOut, sfs);
-        NumericIO.writeSwapShort(pOut, sfe);
-        NumericIO.writeSwapShort(pOut, slen);
-        NumericIO.writeSwapShort(pOut, styp);
-        NumericIO.writeSwapShort(pOut, stas);
-        NumericIO.writeSwapShort(pOut, stae);
-        NumericIO.writeSwapShort(pOut, tatyp);
-        NumericIO.writeSwapShort(pOut, afilf);
-        NumericIO.writeSwapShort(pOut, afils);
-        NumericIO.writeSwapShort(pOut, nofilf);
-        NumericIO.writeSwapShort(pOut, nofils);
-        NumericIO.writeSwapShort(pOut, lcf);
-        NumericIO.writeSwapShort(pOut, hcf);
-        NumericIO.writeSwapShort(pOut, lcs);
-        NumericIO.writeSwapShort(pOut, hcs);
-        NumericIO.writeSwapShort(pOut, year);
-        NumericIO.writeSwapShort(pOut, day);
-        NumericIO.writeSwapShort(pOut, hour);
-        NumericIO.writeSwapShort(pOut, minute);
-        NumericIO.writeSwapShort(pOut, sec);
-        NumericIO.writeSwapShort(pOut, timbas);
-        NumericIO.writeSwapShort(pOut, trwf);
-        NumericIO.writeSwapShort(pOut, grnors);
-        NumericIO.writeSwapShort(pOut, grnofr);
-        NumericIO.writeSwapShort(pOut, grnlof);
-        NumericIO.writeSwapShort(pOut, gaps);
-        NumericIO.writeSwapShort(pOut, otrav);
+        writeSwapInt(pOut, tracl);
+        writeSwapInt(pOut, tracr);
+        writeSwapInt(pOut, fldr);
+        writeSwapInt(pOut, tracf);
+        writeSwapInt(pOut, ep);
+        writeSwapInt(pOut, cdp);
+        writeSwapInt(pOut, cdpt);
+        writeSwapShort(pOut, trid);
+        writeSwapShort(pOut, nvs);
+        writeSwapShort(pOut, nhs);
+        writeSwapShort(pOut, duse);
+        writeSwapInt(pOut, offset);
+        writeSwapInt(pOut, gelev);
+        writeSwapInt(pOut, selev);
+        writeSwapInt(pOut, sdepth);
+        writeSwapInt(pOut, gdel);
+        writeSwapInt(pOut, sdel);
+        writeSwapInt(pOut, swdep);
+        writeSwapInt(pOut, gwdep);
+        writeSwapShort(pOut, scalel);
+        writeSwapShort(pOut, scalco);
+        writeSwapInt(pOut, sx);
+        writeSwapInt(pOut, sy);
+        writeSwapInt(pOut, gx);
+        writeSwapInt(pOut, gy);
+        writeSwapShort(pOut, counit);
+        writeSwapShort(pOut, wevel);
+        writeSwapShort(pOut, swevel);
+        writeSwapShort(pOut, sut);
+        writeSwapShort(pOut, gut);
+        writeSwapShort(pOut, sstat);
+        writeSwapShort(pOut, gstat);
+        writeSwapShort(pOut, tstat);
+        writeSwapShort(pOut, laga);
+        writeSwapShort(pOut, lagb);
+        writeSwapShort(pOut, delrt);
+        writeSwapShort(pOut, muts);
+        writeSwapShort(pOut, mute);
+        writeSwapUShort(pOut, ns); // unsigned
+        writeSwapUShort(pOut, dt); // unsigned
+        writeSwapShort(pOut, gain);
+        writeSwapShort(pOut, igc);
+        writeSwapShort(pOut, igi);
+        writeSwapShort(pOut, corr);
+        writeSwapShort(pOut, sfs);
+        writeSwapShort(pOut, sfe);
+        writeSwapShort(pOut, slen);
+        writeSwapShort(pOut, styp);
+        writeSwapShort(pOut, stas);
+        writeSwapShort(pOut, stae);
+        writeSwapShort(pOut, tatyp);
+        writeSwapShort(pOut, afilf);
+        writeSwapShort(pOut, afils);
+        writeSwapShort(pOut, nofilf);
+        writeSwapShort(pOut, nofils);
+        writeSwapShort(pOut, lcf);
+        writeSwapShort(pOut, hcf);
+        writeSwapShort(pOut, lcs);
+        writeSwapShort(pOut, hcs);
+        writeSwapShort(pOut, year);
+        writeSwapShort(pOut, day);
+        writeSwapShort(pOut, hour);
+        writeSwapShort(pOut, minute);
+        writeSwapShort(pOut, sec);
+        writeSwapShort(pOut, timbas);
+        writeSwapShort(pOut, trwf);
+        writeSwapShort(pOut, grnors);
+        writeSwapShort(pOut, grnofr);
+        writeSwapShort(pOut, grnlof);
+        writeSwapShort(pOut, gaps);
+        writeSwapShort(pOut, otrav);
         /* cwp local assignments */
-        NumericIO.writeSwapFloat(pOut, d1);
-        NumericIO.writeSwapFloat(pOut, f1);
-        NumericIO.writeSwapFloat(pOut, d2);
-        NumericIO.writeSwapFloat(pOut, f2);
-        NumericIO.writeSwapFloat(pOut, ungpow);
-        NumericIO.writeSwapFloat(pOut, unscale);
-        NumericIO.writeSwapInt(pOut, ntr);
-        NumericIO.writeSwapShort(pOut, mark);
-        NumericIO.writeSwapShort(pOut, shortpad);
+        writeSwapFloat(pOut, d1);
+        writeSwapFloat(pOut, f1);
+        writeSwapFloat(pOut, d2);
+        writeSwapFloat(pOut, f2);
+        writeSwapFloat(pOut, ungpow);
+        writeSwapFloat(pOut, unscale);
+        writeSwapInt(pOut, ntr);
+        writeSwapShort(pOut, mark);
+        writeSwapShort(pOut, shortpad);
 
         for (int i = 0; i < 14; i++) {
-            NumericIO.writeSwapShort(pOut, unass[i]);
+            writeSwapShort(pOut, unass[i]);
         }
 
     }
@@ -545,25 +566,19 @@ public class SUHeader {
         if (pkey == null) {
             return fldr;
         }
-        if (pkey.equals("cdp")) {
-            return cdp;
-        } else {
-            if (pkey.equals("offset")) {
+        switch (pkey) {
+            case "cdp":
+                return cdp;
+            case "offset":
                 return offset;
-            } else {
-                if (pkey.equals("tracf")) {
-                    return tracf;
-                } else {
-                    if (pkey.equals("ep")) {
-                        return ep;
-                    } else {
-                        if (pkey.equals("fldr")) {
-                            return fldr;
-                        }
-                    }
-                }
-            }
-
+            case "tracf":
+                return tracf;
+            case "ep":
+                return ep;
+            case "fldr":
+                return fldr;
+            default:
+                break;
         }
         return fldr;
     }

@@ -10,15 +10,25 @@
  */
 package gfx;
 
+import static java.awt.Color.black;
+import static java.awt.Font.PLAIN;
+import static java.lang.Float.floatToIntBits;
+import static java.lang.Float.intBitsToFloat;
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+import static java.lang.String.format;
+
 /**
- * The class SVContourmao is a port of the code found in
- * the SU program suxcontour.
- * 
+ * The class SVContourmao is a port of the code found in the SU program
+ * suxcontour.
+ *
  * @author Williams Lima
  */
 public class SVContourmap extends SVActor {
 
-    /** Creates a new instance of ContourMap */
+    /**
+     * Creates a new instance of ContourMap
+     */
     public SVContourmap() {
         m_imageOutOfDate = true;
     }
@@ -84,7 +94,6 @@ public class SVContourmap extends SVActor {
 
         m_data = pData;
 
-
     }
 
     private void convertDataToImage() {
@@ -107,7 +116,7 @@ public class SVContourmap extends SVActor {
         float zmin, zmax;
         zmin = zmax = z[0];
         for (i2 = 0; i2 < m_n2; i2++) {
-            iz=i2*m_n1;
+            iz = i2 * m_n1;
             for (i1 = 0; i1 < m_n1; i1++, iz++) {
                 zmin = MIN(zmin, z[iz]);
                 zmax = MAX(zmax, z[iz]);
@@ -202,7 +211,7 @@ public class SVContourmap extends SVActor {
         int contourzp;
         if (m_style == NORMAL) {
             i2 = i2beg;
-            for (i2c = 0; i2c < n2c ; i2c++, i2 += i2step) {
+            for (i2c = 0; i2c < n2c; i2c++, i2 += i2step) {
                 contourzp = n1c * n2c - (i2c + 1) * n1c;
                 i1 = i1beg;
                 for (i1c = 0; i1c < n1c; i1c++, i1 += i1step) {
@@ -214,7 +223,7 @@ public class SVContourmap extends SVActor {
             i1 = i1beg;
             for (i1c = 0; i1c < n1c; i1c++, i1 += i1step) {
                 i2 = i2beg;
-                for (i2c = 0; i2c <n2c; i2c++, i2 += i2step) {
+                for (i2c = 0; i2c < n2c; i2c++, i2 += i2step) {
                     m_contourz[contourzp++] = z[i1 + i2 * m_n1];
                 }
             }
@@ -228,7 +237,6 @@ public class SVContourmap extends SVActor {
         /* Generate a set of suitable plot coordinates
         (the actual scaling to X-windows coordinates will be done later
          */
-
         m_ix = new float[m_nx];
         m_iy = new float[m_ny];
 
@@ -283,15 +291,15 @@ public class SVContourmap extends SVActor {
         }
 
         /*Set the color of the contour labels */
-        java.awt.Color labelColor = labelColor = java.awt.Color.black;
-        if (!labelccolor.equalsIgnoreCase("none")) {
+        java.awt.Color labelColor = black;
+        if (labelccolor.equalsIgnoreCase("none")) {
         } else {
         }
 
         pGC.setColor(labelColor);
 
         /* Set the labeling font */
-        java.awt.Font labelFont = new java.awt.Font("Arial", java.awt.Font.PLAIN,
+        java.awt.Font labelFont = new java.awt.Font("Arial", PLAIN,
                 12);
         pGC.setFont(labelFont);
 
@@ -319,7 +327,7 @@ public class SVContourmap extends SVActor {
             }
 
             /*Set the color of the contour lines */
-            java.awt.Color color = java.awt.Color.black;
+            java.awt.Color color = black;
             if (!ccolor[ic].equalsIgnoreCase("none")) {
             } else {
             }
@@ -336,8 +344,9 @@ public class SVContourmap extends SVActor {
     /**
      * Auxiliary function.
      *
-     * Extracted from SU sources. Please look at $CWPROOT/src/xplot/main/xcontour.c for
-     * detailed description of this function.
+     * Extracted from SU sources. Please look at
+     * $CWPROOT/src/xplot/main/xcontour.c for detailed description of this
+     * function.
      */
     private void xContour(java.awt.Graphics pG, float cp, int nx, float x[], int ny, float y[], float z[],
             char lcflag, String lcf, String lcc, float w[]) {
@@ -345,17 +354,21 @@ public class SVContourmap extends SVActor {
         float d;
         float xmin = MIN(x[0], x[nx - 1]), xmax = MAX(x[0], x[nx - 1]);
         float ymin = MIN(y[0], y[ny - 1]), ymax = MAX(y[0], y[ny - 1]);
-        float xc = 0.0f, yc = 0.0f;	/* contour labeling centered at (xc,yc)	*/
-        float xw, yw;	/* width and length of contour labeling */
-        float xdmin, xdmax, ydmin, ydmax; /* range of contour	*/
-        int id;	/* =0 if a point on contour has been used as (xc,yc) */
+        float xc = 0.0f, yc = 0.0f;
+        /* contour labeling centered at (xc,yc)	*/
+        float xw, yw;
+        /* width and length of contour labeling */
+        float xdmin, xdmax, ydmin, ydmax;
+        /* range of contour	*/
+        int id;
+        /* =0 if a point on contour has been used as (xc,yc) */
         int cells = 0;
         String str;
         float c = cp;
         ConnectParameters connPrm = new ConnectParameters();
 
         /* convert a number into a string */
-        str = String.format("%g", c);
+        str = format("%g", c);
 
         /* determine length and width for printing the string */
         java.awt.font.FontRenderContext frc = ((java.awt.Graphics2D) pG).getFontRenderContext();
@@ -366,7 +379,7 @@ public class SVContourmap extends SVActor {
 
         /* restrict contour labeling from edges */
         for (iy = 0; iy < ny - 1; iy++) {
-            for (ix = 0         , connPrm.cell = iy * nx; ix < nx - 1; ix++, connPrm.cell++) {
+            for (ix = 0, connPrm.cell = iy * nx; ix < nx - 1; ix++, connPrm.cell++) {
                 if (x[ix] < xmin + 2.0 * xw || x[ix] > xmax - 2.0 * xw || y[iy] < ymin + yw || y[iy] > ymax - yw) {
                     w[(int) connPrm.cell] += 1.;
                 }
@@ -378,8 +391,8 @@ public class SVContourmap extends SVActor {
 
         /* find all the intersections */
         for (iy = 0; iy < ny; iy++) {
-            for (ix = 0        , connPrm.cell= 
-                 iy * nx  ; ix < nx; ix++, connPrm.cell++) {
+            for (ix = 0, connPrm.cell
+                    = iy * nx; ix < nx; ix++, connPrm.cell++) {
                 /* check for intersection with west edge of cell */
                 if ((iy < ny - 1) && BTWN(c, z[(int) connPrm.cell], z[(int) connPrm.cell + nx])) {
                     z[(int) connPrm.cell] = SETW(z[(int) connPrm.cell]);
@@ -399,7 +412,7 @@ public class SVContourmap extends SVActor {
         }
 
         /* follow contours intersecting north boundary */
-        for (ix = 0    , startcell = (ny - 1) * nx; (non > 0) && (ix < nx - 1); ix++, startcell++) {
+        for (ix = 0, startcell = (ny - 1) * nx; (non > 0) && (ix < nx - 1); ix++, startcell++) {
             if (SSET(z[startcell]) != 0) {
                 d = DELTA(c, z[startcell], z[startcell + 1]);
                 connPrm.x0 = (1.0f - d) * x[ix] + d * x[ix + 1];
@@ -437,7 +450,7 @@ public class SVContourmap extends SVActor {
         }
 
         /* follow contours intersecting east boundary */
-        for (iy = 0    , startcell = nx - 1; (non > 0) && (iy < ny - 1); iy++, startcell += nx) {
+        for (iy = 0, startcell = nx - 1; (non > 0) && (iy < ny - 1); iy++, startcell += nx) {
             if (WSET(z[startcell]) != 0) {
                 d = DELTA(c, z[startcell], z[startcell + nx]);
                 connPrm.x0 = x[nx - 1];
@@ -474,7 +487,7 @@ public class SVContourmap extends SVActor {
         }
 
         /* follow contours intersecting south boundary */
-        for (ix = 0  , startcell = 0; (non > 0) && (ix < nx - 1); ix++, startcell++) {
+        for (ix = 0, startcell = 0; (non > 0) && (ix < nx - 1); ix++, startcell++) {
             if (SSET(z[startcell]) != 0) {
                 d = DELTA(c, z[startcell], z[startcell + 1]);
                 connPrm.x0 = (1.0f - d) * x[ix] + d * x[ix + 1];
@@ -510,7 +523,7 @@ public class SVContourmap extends SVActor {
         }
 
         /* follow contours intersecting west boundary */
-        for (iy = 0  , startcell = 0; (non > 0) && (iy < ny - 1); iy++, startcell += nx) {
+        for (iy = 0, startcell = 0; (non > 0) && (iy < ny - 1); iy++, startcell += nx) {
             if (WSET(z[startcell]) != 0) {
                 d = DELTA(c, z[startcell], z[startcell + nx]);
                 connPrm.x0 = x[0];
@@ -547,7 +560,7 @@ public class SVContourmap extends SVActor {
 
         /* follow interior contours */
         for (iy = 1; iy < ny - 1; iy++) {
-            for (ix = 0       , startcell = iy * nx; (non > 0) && (ix < nx - 1); ix++, startcell++) {
+            for (ix = 0, startcell = iy * nx; (non > 0) && (ix < nx - 1); ix++, startcell++) {
                 /* check south edge of cell */
                 if (SSET(z[startcell]) != 0) {
                     d = DELTA(c, z[startcell], z[startcell + 1]);
@@ -599,7 +612,7 @@ public class SVContourmap extends SVActor {
                 }
             }
         }
-    /* contour drawing is done */
+        /* contour drawing is done */
     }
 
     private void wcell(int nx, float x[], int ny, float y[], float w[],
@@ -620,8 +633,8 @@ public class SVContourmap extends SVActor {
         }
 
         for (iy = iyl; iy <= iyh; ++iy) {
-            for (ix = ixl          , cell= 
-                iy  * nx + ixl; ix <= ixh; ix++, cell++) {
+            for (ix = ixl, cell
+                    = iy * nx + ixl; ix <= ixh; ix++, cell++) {
                 w[cell] += 1.0;
             }
         }
@@ -634,7 +647,7 @@ public class SVContourmap extends SVActor {
         (unsigned int) NINT(xw),
         (unsigned int) NINT(yw),False);
          */
-        /*  XDrawString(dpy, win, gcl, NINT(x), NINT(y + yw),
+ /*  XDrawString(dpy, win, gcl, NINT(x), NINT(y + yw),
         str, (int) strlen(str));
         if (font - font) {
         color += 0;
@@ -645,8 +658,9 @@ public class SVContourmap extends SVActor {
     /**
      * Auxiliary function.
      *
-     * Extracted from SU sources. Please look at $CWPROOT/src/xplot/main/xcontour.c for
-     * detailed description of this function.
+     * Extracted from SU sources. Please look at
+     * $CWPROOT/src/xplot/main/xcontour.c for detailed description of this
+     * function.
      */
     int connect(java.awt.Graphics pG, float c, int nx, float x[], int ny, float y[], float z[],
             ConnectParameters prm) {
@@ -675,7 +689,7 @@ public class SVContourmap extends SVActor {
                 return (0);
             }
 
-        /* else if exiting east */
+            /* else if exiting east */
         } else if (WSET(z[cell + 1]) != 0) {
             cell += 1;
             ix++;
@@ -694,7 +708,7 @@ public class SVContourmap extends SVActor {
                 return (0);
             }
 
-        /* else if exiting south */
+            /* else if exiting south */
         } else if (SSET(z[cell]) != 0) {
             d = DELTA(c, z[cell], z[cell + 1]);
             prm.xd = (1.0f - d) * x[ix] + d * x[ix + 1];
@@ -710,7 +724,7 @@ public class SVContourmap extends SVActor {
                 return (0);
             }
 
-        /* else if exiting west */
+            /* else if exiting west */
         } else if (WSET(z[cell]) != 0) {
             d = DELTA(c, z[cell], z[cell + nx]);
             prm.xd = x[ix];
@@ -726,7 +740,7 @@ public class SVContourmap extends SVActor {
                 return (0);
             }
 
-        /* else if no intersection exists */
+            /* else if no intersection exists */
         } else {
             return (0);
         }
@@ -734,7 +748,7 @@ public class SVContourmap extends SVActor {
     }
 
     boolean BTWN(float a, float b, float c) {
-        return (Math.min(b, c) <= a) && (a < Math.max(b, c));
+        return (min(b, c) <= a) && (a < max(b, c));
     }
 
     private float DELTA(float a, float b, float c) {
@@ -742,27 +756,27 @@ public class SVContourmap extends SVActor {
     }
 
     private float SETS(float z) {
-        return Float.intBitsToFloat(Float.floatToIntBits(z) | SOUTH);
+        return intBitsToFloat(floatToIntBits(z) | SOUTH);
     }
 
     private float CLRS(float z) {
-        return Float.intBitsToFloat(Float.floatToIntBits(z) & (~SOUTH));
+        return intBitsToFloat(floatToIntBits(z) & (~SOUTH));
     }
 
     private float SSET(float z) {
-        return Float.intBitsToFloat(Float.floatToIntBits(z) & SOUTH);
+        return intBitsToFloat(floatToIntBits(z) & SOUTH);
     }
 
     private float SETW(float z) {
-        return Float.intBitsToFloat(Float.floatToIntBits(z) | WEST);
+        return intBitsToFloat(floatToIntBits(z) | WEST);
     }
 
     private float CLRW(float z) {
-        return Float.intBitsToFloat(Float.floatToIntBits(z) & (~WEST));
+        return intBitsToFloat(floatToIntBits(z) & (~WEST));
     }
 
     private float WSET(float z) {
-        return Float.intBitsToFloat(Float.floatToIntBits(z) & WEST);
+        return intBitsToFloat(floatToIntBits(z) & WEST);
     }
 
     private float MAX(float x, float y) {
@@ -796,9 +810,10 @@ public class SVContourmap extends SVActor {
     //
     private final int SOUTH = 01;
     private final int WEST = 02;
-    private final int NCMAX = 1024;      /* Max number of contour lines */
+    private final int NCMAX = 1024;
+    /* Max number of contour lines */
 
-    /* Data */
+ /* Data */
     float m_dc;
     float m_fc;
     float m_zmin;
